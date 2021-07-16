@@ -20,12 +20,6 @@
         <script>
 
             var options = {
-                title: {
-                    text: 'Covid in Brazil - Percentage of Not Fully Vaccinated People'
-                    align: 'left',
-                    margin: 10,
-                    floating: flase,
-                },
 
                 chart: {
                     height: 400,
@@ -38,9 +32,17 @@
                     },
                     toolbar: {
                         autoSelected: 'zoom'
-                    }
+                    },
+                },
+                title: {
+                    text: 'Covid in Brazil - Percentage of Not Fully Vaccinated People',
+                    align: 'left',
+                    margin: 10,
+                    floating: false
                 },
                 series: [],
+
+
             };
 
 var chart = new ApexCharts(document.querySelector("#chart"), options);
