@@ -41,6 +41,13 @@
                     floating: false
                 },
                 series: [],
+                colors: [
+                    '#e6194b', '#3cb44b', '#ffe119', '#4363d8', '#f58231',
+                    '#911eb4', '#46f0f0', '#f032e6', '#bcf60c', '#fabebe',
+                    '#008080', '#e6beff', '#9a6324', '#fffac8', '#800000',
+                    '#aaffc3', '#808000', '#ffd8b1', '#000075', '#808080',
+                    '#3d9976', '#5be5b1', '#3d7699', '#5bb1E5', '#483d99',
+                    '#6d5bE5', '#8d3d99', '#d45be5'],
                 xaxis: {
                     title: {
                         text: 'Data (YYYY-MM-DD)'
@@ -55,12 +62,12 @@
 
             };
 
-var chart = new ApexCharts(document.querySelector("#chart"), options);
-chart.render();
-
-let dd = $.getJSON('https://raw.githubusercontent.com/j3r3mias/j3r3mias.github.io/master/covid/brazil-not-fully-vaccinated-per-state.json', function(response) {
-    chart.updateSeries(response.data)
-});
+            var chart = new ApexCharts(document.querySelector("#chart"), options);
+            chart.render();
+            
+            let dd = $.getJSON('https://raw.githubusercontent.com/j3r3mias/j3r3mias.github.io/master/covid/brazil-not-fully-vaccinated-per-state.json', function(response) {
+                chart.updateSeries(response.data)
+            });
 
         </script>
     </body>
