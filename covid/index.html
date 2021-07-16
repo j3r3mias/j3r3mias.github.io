@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Covid in Brazil - Percentage of Not Fully Vaccinated People</title>
+        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-117519250-1"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'UA-117519250-1');
+        </script>
+        <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    </head>
+
+    <body>
+        <div id="chart"></div>
+
+        <script>
+
+            var options = {
+                chart: {
+                    height: 500,
+                    width: "100%",
+                    type: "line",
+                    zoom: {
+                        type: 'x',
+                        enabled: true,
+                        autoScaleYaxis: true
+                    },
+                    toolbar: {
+                        autoSelected: 'zoom'
+                    }
+                },
+                series: [],
+            };
+
+var chart = new ApexCharts(document.querySelector("#chart"), options);
+chart.render();
+
+let dd = $.getJSON('https://raw.githubusercontent.com/j3r3mias/j3r3mias.github.io/master/covid/brazil-not-fully-vaccinated-per-state.json', function(response) {
+    chart.updateSeries(response.data)
+});
+
+        </script>
+    </body>
+</html>
