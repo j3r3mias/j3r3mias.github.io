@@ -95,7 +95,7 @@ single_or_first_dose_vaccinated.set_index(['date'], inplace = True)
 
 single_or_first_dose_vaccinated_per_state = single_or_first_dose_vaccinated[['state', 'percentages_first_or_single_dose_vaccinated_calculated']].groupby(['state', 'date']).sum().unstack('state')
 single_or_first_dose_vaccinated_per_state.columns = single_or_first_dose_vaccinated_per_state.columns.droplevel(0)
-single_or_first_dose_vaccinated_per_state = single_or_first_dose_vaccinated_per_state.fillna(100)
+single_or_first_dose_vaccinated_per_state = single_or_first_dose_vaccinated_per_state.fillna(0)
 
 print(f'         [+] Saving new CSV..')
 single_or_first_dose_vaccinated_per_state.to_csv('brazil-single-or-first-dose-vaccinated-per-state.csv',
