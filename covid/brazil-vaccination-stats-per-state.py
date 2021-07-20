@@ -16,23 +16,23 @@ r = requests.get('https://raw.githubusercontent.com/wcota/covid19br/master/cases
 h = hashlib.md5(r.content).hexdigest()
 print(f'     [+] Hash: {h}')
 
-# if os.path.exists(file):
-#     with open(file, 'r') as f:
-#       data = f.read().encode()
-#       hb = hashlib.md5(data).hexdigest()
-#       print(f'     [+] Hash of the current file: {hb}')
-# 
-#     if h != hb:
-#         print(f'     [+] The new file is different. Saving..')
-#         with open(file, 'w') as f:
-#             f.write(r.content.decode())
-#     else:
-#         print(f"     [+] The file didn't change")
-#         exit()
-# else:
-#     print(f'     [+] File doesnt exist. Saving..')
-#     with open(file, 'w') as f:
-#       f.write(r.content.decode())
+if os.path.exists(file):
+    with open(file, 'r') as f:
+      data = f.read().encode()
+      hb = hashlib.md5(data).hexdigest()
+      print(f'     [+] Hash of the current file: {hb}')
+
+    if h != hb:
+        print(f'     [+] The new file is different. Saving..')
+        with open(file, 'w') as f:
+            f.write(r.content.decode())
+    else:
+        print(f"     [+] The file didn't change")
+        exit()
+else:
+    print(f'     [+] File doesnt exist. Saving..')
+    with open(file, 'w') as f:
+      f.write(r.content.decode())
 
 print(f' [+] Open population info file..')
 population = pd.read_csv('brazil-population-per-state.csv')
@@ -117,11 +117,11 @@ jsondata = json.dumps(datadicts)
 with open('brazil-single-or-first-dose-vaccinated-per-state.json', 'w') as f:
     f.write(jsondata)
 
-# print(f' [+] Send the new data to github..')
-# author = repo.config_reader().get_value('user', 'name')
-# message = f'New covid files in {datetime.today().strftime("%d-%m-%Y-%H-%M")}.'
-# try:
-#     repo.git.commit('-am', message, author = author)
-#     origin.push()
-# except:
-#     print(f'     [+] The files are up to date..')
+print(f' [+] Send the new data to github..')
+author = repo.config_reader().get_value('user', 'name')
+message = f'New covid files in {datetime.today().strftime("%d-%m-%Y-%H-%M")}.'
+try:
+    repo.git.commit('-am', message, author = author)
+    origin.push()
+except:
+    print(f'     [+] The files are up to date..')
