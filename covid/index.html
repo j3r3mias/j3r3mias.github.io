@@ -15,14 +15,15 @@
     </head>
 
     <body>
-        <div id="chart_01"></div>
-        <div id="chart_02"></div>
+        <div id="chart_10"></div>
+        <div id="chart_11"></div>
+        <div id="chart_20"></div>
         <div>Population is based in Estimates of Resident Population in Brazil
             with reference date of July 1 (2020), minus the number of
             deaths by covid.</div>
         <script>
 
-            var options_01 = {
+            var options_10 = {
 
                 chart: {
                     height: 400,
@@ -65,7 +66,81 @@
 
             };
 
-            var options_02 = {
+        var options_11 = {
+          series: [],
+          chart: {
+          type: 'bar',
+          height: 380
+        },
+        plotOptions: {
+          bar: {
+            barHeight: '100%',
+            distributed: true,
+            horizontal: true,
+            dataLabels: {
+              position: 'bottom'
+            },
+          }
+        },
+                colors: [
+                    '#e6194b', '#3cb44b', '#ffe119', '#4363d8', '#f58231',
+                    '#911eb4', '#46f0f0', '#f032e6', '#bcf60c', '#fabebe',
+                    '#008080', '#e6beff', '#9a6324', '#800000', '#aaffc3',
+                    '#808000', '#ffd8b1', '#000075', '#808080', '#3d9976',
+                    '#5be5b1', '#3d7699', '#5bb1E5', '#483d99', '#6d5bE5',
+                    '#8d3d99', '#d45be5'],
+ 
+        dataLabels: {
+          enabled: true,
+          textAnchor: 'start',
+          style: {
+            colors: ['#fff']
+          },
+          formatter: function (val, opt) {
+            return opt.w.globals.labels[opt.dataPointIndex] + ":  " + val
+          },
+          offsetX: 0,
+          dropShadow: {
+            enabled: true
+          }
+        },
+        stroke: {
+          width: 1,
+          colors: ['#fff']
+        },
+        yaxis: {
+          labels: {
+            show: false
+          }
+        },
+        title: {
+            text: 'AAAA',
+            align: 'center',
+            floating: true
+        },
+        subtitle: {
+            text: 'BBBB',
+            align: 'center',
+        },
+        tooltip: {
+          theme: 'dark',
+          x: {
+            show: false
+          },
+          y: {
+            title: {
+              formatter: function () {
+                return ''
+              }
+            }
+          }
+        }
+        };
+
+        var chart = new ApexCharts(document.querySelector("#chart"), options);
+        chart.render();
+
+            var options_20 = {
             
                 chart: {
                     height: 400,
@@ -108,17 +183,26 @@
             
             };
             
-            var chart_01 = new ApexCharts(document.querySelector("#chart_01"), options_01);
-            var chart_02 = new ApexCharts(document.querySelector("#chart_02"), options_02);
-            chart_01.render();
-            chart_02.render();
+            var chart_10 = new ApexCharts(document.querySelector("#chart_10"), options_10);
+            var chart_11 = new ApexCharts(document.querySelector("#chart_11"), options_11);
+            var chart_20 = new ApexCharts(document.querySelector("#chart_20"), options_20);
+            chart_10.render();
+            chart_11.render();
+            chart_20.render();
             
             $.getJSON('https://raw.githubusercontent.com/j3r3mias/j3r3mias.github.io/master/covid/brazil-not-fully-vaccinated-per-state.json', function(response) {
-                chart_01.updateSeries(response.data)
+                chart_10.updateSeries(response.data)
+            });
+
+            $.getJSON('https://raw.githubusercontent.com/j3r3mias/j3r3mias.github.io/master/covid/brazil-not-fully-vaccinated-per-state.json', function(response) {
+                for (var i = 0; i < response.data.length; i++) {
+                    response.data[i].data = response.data[i].data[response.data[i].data.length - 1];
+                }
+                chart_11.updateSeries(response.data)
             });
             
             $.getJSON('https://raw.githubusercontent.com/j3r3mias/j3r3mias.github.io/master/covid/brazil-single-or-first-dose-vaccinated-per-state.json', function(response) {
-                chart_02.updateSeries(response.data)
+                chart_20.updateSeries(response.data)
             });
 
         </script>
