@@ -302,7 +302,7 @@ $.getJSON('https://raw.githubusercontent.com/j3r3mias/j3r3mias.github.io/master/
 $.getJSON('https://raw.githubusercontent.com/j3r3mias/j3r3mias.github.io/master/covid/brazil-single-or-first-dose-vaccinated-per-state.json', function(response) {
     states = [];
     values = [];
-    title = 'Covid in Brazil - Percentage of People with First or Single Shot in ' + response.data[0].data[response.data[0].data.length - 1].x;
+    title = 'Covid in Brazil - Percentage of People with First or Single Dose of the Vaccine in ' + response.data[0].data[response.data[0].data.length - 1].x;
     console.log(title);
     for (var i = 0; i < response.data.length; i++) {
         states.push(response.data[i].name);
