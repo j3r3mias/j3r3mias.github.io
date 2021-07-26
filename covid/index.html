@@ -271,9 +271,6 @@ chart_21.render();
 
 $.getJSON('https://raw.githubusercontent.com/j3r3mias/j3r3mias.github.io/master/covid/brazil-not-fully-vaccinated-per-state.json', function(response) {
     chart_10.updateSeries(response.data)
-});
-
-$.getJSON('https://raw.githubusercontent.com/j3r3mias/j3r3mias.github.io/master/covid/brazil-not-fully-vaccinated-per-state.json', function(response) {
     states = [];
     values = [];
     title = 'Covid in Brazil - Percentage of Fully Vaccinated People in ' + response.data[0].data[response.data[0].data.length - 1].x;
@@ -297,9 +294,6 @@ $.getJSON('https://raw.githubusercontent.com/j3r3mias/j3r3mias.github.io/master/
 
 $.getJSON('https://raw.githubusercontent.com/j3r3mias/j3r3mias.github.io/master/covid/brazil-single-or-first-dose-vaccinated-per-state.json', function(response) {
     chart_20.updateSeries(response.data)
-});
-
-$.getJSON('https://raw.githubusercontent.com/j3r3mias/j3r3mias.github.io/master/covid/brazil-single-or-first-dose-vaccinated-per-state.json', function(response) {
     states = [];
     values = [];
     title = 'Covid in Brazil - Percentage of People with First or Single Dose of the Vaccine in ' + response.data[0].data[response.data[0].data.length - 1].x;
