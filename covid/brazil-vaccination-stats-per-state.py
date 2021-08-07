@@ -104,8 +104,6 @@ not_fully_vaccinated_per_state = not_fully_vaccinated_per_state.fillna(100)
 print(f'         [+] Saving new CSV..')
 tranposed_not_fully_vaccinated_per_state = not_fully_vaccinated_per_state.T
 tranposed_not_fully_vaccinated_per_state['flags'] = tranposed_not_fully_vaccinated_per_state.index.map(UFs)
-print(tranposed_not_fully_vaccinated_per_state[['flags']])
-
 tranposed_not_fully_vaccinated_per_state.to_csv('brazil-not-fully-vaccinated-per-state.csv',
         float_format = '%.3f')
 
@@ -135,7 +133,9 @@ single_or_first_dose_vaccinated_per_state.columns = single_or_first_dose_vaccina
 single_or_first_dose_vaccinated_per_state = single_or_first_dose_vaccinated_per_state.fillna(0)
 
 print(f'         [+] Saving new CSV..')
-single_or_first_dose_vaccinated_per_state.T.to_csv('brazil-single-or-first-dose-vaccinated-per-state.csv',
+tranposed_single_or_first_dose_vaccinated_per_state = single_or_first_dose_vaccinated_per_state.T
+tranposed_single_or_first_dose_vaccinated_per_state['flags'] = tranposed_single_or_first_dose_vaccinated_per_state.index.map(UFs)
+tranposed_single_or_first_dose_vaccinated_per_state.to_csv('brazil-single-or-first-dose-vaccinated-per-state.csv',
         float_format = '%.3f')
 
 print(f'         [+] Building new JSON..')
