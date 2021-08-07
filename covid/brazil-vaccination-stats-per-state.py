@@ -10,34 +10,15 @@ pd.set_option('display.max_colwidth', -1)
 file = 'cases-brazil-states.csv'
 
 UFnames = {
-        'AC': 'Acre',
-        'AL': 'Alagoas',
-        'AP': 'Amapá',
-        'AM': 'Amazonas',
-        'BA': 'Bahia',
-        'CE': 'Ceará',
-        'ES': 'Espirito Santo', 
-        'GO': 'Goiás', 
-        'MA': 'Maranhão', 
-        'MT': 'Mato Grosso', 
-        'MS': 'Mato Grosso do Sul', 
-        'MG': 'Minas Gerais', 
-        'PA': 'Pará', 
-        'PB': 'Paraíba', 
-        'PR': 'Paraná', 
-        'PE': 'Pernambuco', 
-        'PI': 'Piauí', 
-        'RJ': 'Rio de Janeiro', 
-        'RN': 'Rio Grande do Norte', 
-        'RS': 'Riop Grande do Sul', 
-        'RO': 'Rondônia', 
-        'RR': 'Roraima', 
-        'SC': 'Santa Catarina', 
-        'SP': 'São Paulo', 
-        'SE': 'Sergipe', 
-        'TO': 'Tocantins', 
-        'DF': 'Federal District',
-        'TOTAL': 'Brazil'
+        'AC': 'Acre', 'AL': 'Alagoas', 'AP': 'Amapá', 'AM': 'Amazonas', 'BA':
+        'Bahia', 'CE': 'Ceará', 'ES': 'Espirito Santo', 'GO': 'Goiás', 'MA':
+        'Maranhão', 'MT': 'Mato Grosso', 'MS': 'Mato Grosso do Sul', 'MG':
+        'Minas Gerais', 'PA': 'Pará', 'PB': 'Paraíba', 'PR': 'Paraná', 'PE':
+        'Pernambuco', 'PI': 'Piauí', 'RJ': 'Rio de Janeiro', 
+        'RN': 'Rio Grande do Norte', 'RS': 'Riop Grande do Sul', 
+        'RO': 'Rondônia', 'RR': 'Roraima', 'SC': 'Santa Catarina', 
+        'SP': 'São Paulo', 'SE': 'Sergipe', 'TO': 'Tocantins', 
+        'DF': 'Federal District', 'TOTAL': 'Brazil'
         }
 
 
@@ -134,6 +115,8 @@ not_fully_vaccinated_per_state = not_fully_vaccinated[['state', 'full_vaccinated
 not_fully_vaccinated_per_state.columns = not_fully_vaccinated_per_state.columns.droplevel(0)
 not_fully_vaccinated_per_state = not_fully_vaccinated_per_state.fillna(100)
 
+not_fully_vaccinated_per_state.index = not_fully_vaccinated_per_state.index.strftime('%Y-%m-%d')
+
 print(f'         [+] Saving new CSV..')
 transposed_not_fully_vaccinated_per_state = not_fully_vaccinated_per_state.T
 transposed_not_fully_vaccinated_per_state['names'] = transposed_not_fully_vaccinated_per_state.index.map(UFnames)
@@ -152,7 +135,7 @@ for g in not_fully_vaccinated_per_state.columns:
     state['name'] = g
     data = []
     for d, v in not_fully_vaccinated_per_state[g].iteritems():
-        data.append({'x' : datetime.strftime(d, '%Y-%m-%d'), 'y' : f'{v:.2f}'})
+        data.append({'x' : d, 'y' : f'{v:.2f}'})
     state['data'] = data
     datadicts['data'].append(state)
 
@@ -169,6 +152,8 @@ single_or_first_dose_vaccinated.set_index(['date'], inplace = True)
 single_or_first_dose_vaccinated_per_state = single_or_first_dose_vaccinated[['state', 'percentages_first_or_single_dose_vaccinated_calculated']].groupby(['state', 'date']).sum().unstack('state')
 single_or_first_dose_vaccinated_per_state.columns = single_or_first_dose_vaccinated_per_state.columns.droplevel(0)
 single_or_first_dose_vaccinated_per_state = single_or_first_dose_vaccinated_per_state.fillna(0)
+
+single_or_first_dose_vaccinated_per_state.index = single_or_first_dose_vaccinated_per_state.index.strftime('%Y-%m-%d')
 
 print(f'         [+] Saving new CSV..')
 transposed_single_or_first_dose_vaccinated_per_state = single_or_first_dose_vaccinated_per_state.T
@@ -187,7 +172,7 @@ for g in single_or_first_dose_vaccinated_per_state.columns:
     state['name'] = g
     data = []
     for d, v in single_or_first_dose_vaccinated_per_state[g].iteritems():
-        data.append({'x' : datetime.strftime(d, '%Y-%m-%d'), 'y' : f'{v:.2f}'})
+        data.append({'x' : d, 'y' : f'{v:.2f}'})
     state['data'] = data
     datadicts['data'].append(state)
 
