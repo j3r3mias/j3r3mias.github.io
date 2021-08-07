@@ -9,6 +9,39 @@ pd.set_option('display.max_colwidth', -1)
 
 file = 'cases-brazil-states.csv'
 
+UFnames = {
+        'AC': 'Acre',
+        'AL': 'Alagoas',
+        'AP': 'Amapá',
+        'AM': 'Amazonas',
+        'BA': 'Bahia',
+        'CE': 'Ceará',
+        'ES': 'Espirito Santo', 
+        'GO': 'Goiás', 
+        'MA': 'Maranhão', 
+        'MT': 'Mato Grosso', 
+        'MS': 'Mato Grosso do Sul', 
+        'MG': 'Minas Gerais', 
+        'PA': 'Pará', 
+        'PB': 'Paraíba', 
+        'PR': 'Paraná', 
+        'PE': 'Pernambuco', 
+        'PI': 'Piauí', 
+        'RJ': 'Rio de Janeiro', 
+        'RN': 'Rio Grande do Norte', 
+        'RS': 'Riop Grande do Sul', 
+        'RO': 'Rondônia', 
+        'RR': 'Roraima', 
+        'SC': 'Santa Catarina', 
+        'SP': 'São Paulo', 
+        'SE': 'Sergipe', 
+        'TO': 'Tocantins', 
+        'DF': 'Federal District',
+        'TOTAL': 'Brazil'
+        }
+
+
+
 UFs = {
         'AC': 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Bandeira_do_Acre.svg/180px-Bandeira_do_Acre.svg.png',
         'AL': 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/Bandeira_de_Alagoas.svg/180px-Bandeira_de_Alagoas.svg.png',
@@ -103,9 +136,10 @@ not_fully_vaccinated_per_state = not_fully_vaccinated_per_state.fillna(100)
 
 print(f'         [+] Saving new CSV..')
 transposed_not_fully_vaccinated_per_state = not_fully_vaccinated_per_state.T
+transposed_not_fully_vaccinated_per_state['names'] = transposed_not_fully_vaccinated_per_state.index.map(UFnames)
 transposed_not_fully_vaccinated_per_state['flags'] = transposed_not_fully_vaccinated_per_state.index.map(UFs)
 cols = list(transposed_not_fully_vaccinated_per_state.columns)
-cols = [cols[-1]] + cols[:-1]
+cols = [cols[-1]] + [cols[-2]] + cols[:-2]
 transposed_not_fully_vaccinated_per_state = transposed_not_fully_vaccinated_per_state[cols]
 
 transposed_not_fully_vaccinated_per_state.to_csv('brazil-not-fully-vaccinated-per-state.csv',
@@ -138,9 +172,10 @@ single_or_first_dose_vaccinated_per_state = single_or_first_dose_vaccinated_per_
 
 print(f'         [+] Saving new CSV..')
 transposed_single_or_first_dose_vaccinated_per_state = single_or_first_dose_vaccinated_per_state.T
+transposed_single_or_first_dose_vaccinated_per_state['names'] = transposed_single_or_first_dose_vaccinated_per_state.index.map(UFnames)
 transposed_single_or_first_dose_vaccinated_per_state['flags'] = transposed_single_or_first_dose_vaccinated_per_state.index.map(UFs)
 cols = list(transposed_single_or_first_dose_vaccinated_per_state.columns)
-cols = [cols[-1]] +  cols[:-1]
+cols = [cols[-1]] + [cols[-2]] +  cols[:-2]
 transposed_single_or_first_dose_vaccinated_per_state = transposed_single_or_first_dose_vaccinated_per_state[cols]
 transposed_single_or_first_dose_vaccinated_per_state.to_csv('brazil-single-or-first-dose-vaccinated-per-state.csv',
         float_format = '%.3f')
