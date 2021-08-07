@@ -139,7 +139,7 @@ transposed_not_fully_vaccinated_per_state = not_fully_vaccinated_per_state.T
 transposed_not_fully_vaccinated_per_state['names'] = transposed_not_fully_vaccinated_per_state.index.map(UFnames)
 transposed_not_fully_vaccinated_per_state['flags'] = transposed_not_fully_vaccinated_per_state.index.map(UFs)
 cols = list(transposed_not_fully_vaccinated_per_state.columns)
-cols = [cols[-1]] + [cols[-2]] + cols[:-2]
+cols = [cols[-2]] + [cols[-1]] + cols[:-2]
 transposed_not_fully_vaccinated_per_state = transposed_not_fully_vaccinated_per_state[cols]
 
 transposed_not_fully_vaccinated_per_state.to_csv('brazil-not-fully-vaccinated-per-state.csv',
@@ -175,7 +175,7 @@ transposed_single_or_first_dose_vaccinated_per_state = single_or_first_dose_vacc
 transposed_single_or_first_dose_vaccinated_per_state['names'] = transposed_single_or_first_dose_vaccinated_per_state.index.map(UFnames)
 transposed_single_or_first_dose_vaccinated_per_state['flags'] = transposed_single_or_first_dose_vaccinated_per_state.index.map(UFs)
 cols = list(transposed_single_or_first_dose_vaccinated_per_state.columns)
-cols = [cols[-1]] + [cols[-2]] +  cols[:-2]
+cols = [cols[-2]] + [cols[-1]] +  cols[:-2]
 transposed_single_or_first_dose_vaccinated_per_state = transposed_single_or_first_dose_vaccinated_per_state[cols]
 transposed_single_or_first_dose_vaccinated_per_state.to_csv('brazil-single-or-first-dose-vaccinated-per-state.csv',
         float_format = '%.3f')
