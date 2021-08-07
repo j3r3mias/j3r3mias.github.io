@@ -75,7 +75,7 @@ if os.path.exists(file):
             f.write(r.content.decode())
     else:
         print(f"     [+] The file didn't change")
-        # exit()
+        exit()
 else:
     print(f'     [+] File doesnt exist. Saving..')
     with open(file, 'w') as f:
@@ -205,10 +205,6 @@ transposed_fully_vaccinated_per_state = transposed_fully_vaccinated_per_state[co
 
 transposed_fully_vaccinated_per_state.to_csv('brazil-fully-vaccinated-per-state.csv',
         float_format = '%.2f', date_format = '%Y-%m-%d')
-exit()
-
-
-
 
 print(f' [+] Send the new data to github..')
 author = repo.config_reader().get_value('user', 'name')
