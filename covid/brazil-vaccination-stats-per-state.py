@@ -5,6 +5,8 @@ import pandas as pd
 import git, json, hashlib, requests, os
 from datetime import datetime
 
+pd.set_option('display.max_colwidth', -1)
+
 file = 'cases-brazil-states.csv'
 
 UFs = {
