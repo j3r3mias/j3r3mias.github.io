@@ -105,6 +105,8 @@ df['first_or_single_dose_vaccinated_per_100_inhabitants'] = df['vaccinated_per_1
 df = df[df['first_or_single_dose_vaccinated_per_100_inhabitants'] != 0]
 df['percentages_first_or_single_dose_vaccinated_calculated'] = df['first_or_single_dose_vaccinated'].fillna(0) / df['population_minus_deaths'] * 100.
 
+
+
 print(f'     [+] Not fully vaccinated people..')
 not_fully_vaccinated = df.loc[:, ['date', 'state', 'percentages_full_vaccinated_calculated']]
 not_fully_vaccinated['full_vaccinated_per_100_calculated'] = 100 - not_fully_vaccinated['percentages_full_vaccinated_calculated']
@@ -180,6 +182,33 @@ print(f'         [+] Saving new JSON..')
 jsondata = json.dumps(datadicts)
 with open('brazil-single-or-first-dose-vaccinated-per-state.json', 'w') as f:
     f.write(jsondata)
+
+print(f'     [+] Fully vaccinated people..')
+fully_vaccinated = df.loc[:, ['date', 'state', 'percentages_full_vaccinated_calculated']]
+fully_vaccinated['full_vaccinated_per_100_calculated'] = fully_vaccinated['percentages_full_vaccinated_calculated']
+fully_vaccinated['date'] = pd.to_datetime(fully_vaccinated['date'])
+fully_vaccinated.set_index(['date'], inplace = True)
+
+fully_vaccinated_per_state = fully_vaccinated[['state', 'full_vaccinated_per_100_calculated']].groupby(['state', 'date']).sum().unstack('state')
+fully_vaccinated_per_state.columns = fully_vaccinated_per_state.columns.droplevel(0)
+fully_vaccinated_per_state = fully_vaccinated_per_state.fillna(0)
+
+fully_vaccinated_per_state.index = fully_vaccinated_per_state.index.strftime('%Y-%m-%d')
+
+print(f'         [+] Saving new CSV..')
+transposed_fully_vaccinated_per_state = fully_vaccinated_per_state.T
+transposed_fully_vaccinated_per_state['names'] = transposed_fully_vaccinated_per_state.index.map(UFnames)
+transposed_fully_vaccinated_per_state['flags'] = transposed_fully_vaccinated_per_state.index.map(UFs)
+cols = list(transposed_fully_vaccinated_per_state.columns)
+cols = [cols[-2]] + [cols[-1]] + cols[:-2]
+transposed_fully_vaccinated_per_state = transposed_fully_vaccinated_per_state[cols]
+
+transposed_fully_vaccinated_per_state.to_csv('brazil-fully-vaccinated-per-state.csv',
+        float_format = '%.2f', date_format = '%Y-%m-%d')
+exit()
+
+
+
 
 print(f' [+] Send the new data to github..')
 author = repo.config_reader().get_value('user', 'name')
