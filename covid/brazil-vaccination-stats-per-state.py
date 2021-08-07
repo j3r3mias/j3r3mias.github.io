@@ -101,6 +101,7 @@ not_fully_vaccinated_per_state = not_fully_vaccinated_per_state.fillna(100)
 
 print(f'         [+] Saving new CSV..')
 tranposed_not_fully_vaccinated_per_state = not_fully_vaccinated_per_state.T
+tranposed_not_fully_vaccinated_per_state['flags'] = UFs
 print(tranposed_not_fully_vaccinated_per_state.head())
 
 tranposed_not_fully_vaccinated_per_state.to_csv('brazil-not-fully-vaccinated-per-state.csv',
