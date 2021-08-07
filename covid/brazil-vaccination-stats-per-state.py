@@ -126,7 +126,7 @@ cols = [cols[-2]] + [cols[-1]] + cols[:-2]
 transposed_not_fully_vaccinated_per_state = transposed_not_fully_vaccinated_per_state[cols]
 
 transposed_not_fully_vaccinated_per_state.to_csv('brazil-not-fully-vaccinated-per-state.csv',
-        float_format = '%.3f', date_format = '%Y-%m-%d')
+        float_format = '%.2f', date_format = '%Y-%m-%d')
 
 print(f'         [+] Building new JSON..')
 datadicts = {"data": []}
@@ -163,7 +163,7 @@ cols = list(transposed_single_or_first_dose_vaccinated_per_state.columns)
 cols = [cols[-2]] + [cols[-1]] +  cols[:-2]
 transposed_single_or_first_dose_vaccinated_per_state = transposed_single_or_first_dose_vaccinated_per_state[cols]
 transposed_single_or_first_dose_vaccinated_per_state.to_csv('brazil-single-or-first-dose-vaccinated-per-state.csv',
-        float_format = '%.3f', date_format = '%Y-%m-%d')
+        float_format = '%.2f', date_format = '%Y-%m-%d')
 
 print(f'         [+] Building new JSON..')
 datadicts = {"data": []}
