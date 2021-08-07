@@ -103,6 +103,7 @@ print(f'         [+] Saving new CSV..')
 tranposed_not_fully_vaccinated_per_state = not_fully_vaccinated_per_state.T
 # tranposed_not_fully_vaccinated_per_state['flags'] = tranposed_not_fully_vaccinated_per_state['states'].map(UFs)
 print(tranposed_not_fully_vaccinated_per_state.head())
+print(tranposed_not_fully_vaccinated_per_state.index)
 
 tranposed_not_fully_vaccinated_per_state.to_csv('brazil-not-fully-vaccinated-per-state.csv',
         float_format = '%.3f')
