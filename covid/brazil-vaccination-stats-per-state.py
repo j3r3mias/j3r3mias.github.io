@@ -54,9 +54,10 @@ UFs = {
         'TOTAL': 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Flag_of_Brazil.svg/210px-Flag_of_Brazil.svg.png'
         }
 
-repo = git.Repo('.', search_parent_directories = True)
-origin = repo.remote(name = 'origin')
-origin.pull()
+with git.Git().custom_environment(GIT_SSH_COMMAND='home/j3r3mias/.ssh/id_rsa'):
+    repo = git.Repo('.', search_parent_directories = True)
+    origin = repo.remote(name = 'origin')
+    origin.pull()
 
 print(f' [+] Dowloading file..')
 r = requests.get('https://raw.githubusercontent.com/wcota/covid19br/master/cases-brazil-states.csv')
@@ -75,7 +76,7 @@ if os.path.exists(file):
             f.write(r.content.decode())
     else:
         print(f"     [+] The file didn't change")
-        exit()
+        # exit()
 else:
     print(f'     [+] File doesnt exist. Saving..')
     with open(file, 'w') as f:
