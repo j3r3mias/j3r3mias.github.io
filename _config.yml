@@ -12,3 +12,10 @@ gist:
         syntax_highlighter: rouge
 plugins:
     - jekyll-sitemap
+
+defaults:
+    -
+        scope:
+            path:       "payloads/**"
+        values:
+            sitemap:    false
