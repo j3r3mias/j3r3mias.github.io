@@ -205,7 +205,7 @@ cols = [cols[-2]] + [cols[-1]] + cols[:-2]
 transposed_fully_vaccinated_per_state = transposed_fully_vaccinated_per_state[cols]
 
 transposed_fully_vaccinated_per_state.to_csv('brazil-fully-vaccinated-per-state.csv',
-        float_format = '%.2f', date_format = '%Y-%m-%d')
+        float_format = '%.3f', date_format = '%Y-%m-%d')
 
 print(f' [+] Send the new data to github..')
 author = repo.config_reader().get_value('user', 'name')
