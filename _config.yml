@@ -18,3 +18,9 @@ defaults:
         path:           "payloads/**"
         values:
             sitemap:    false
+    - scope:
+        path:           "radioamc/**"
+        values:
+            sitemap:    false
+
+
