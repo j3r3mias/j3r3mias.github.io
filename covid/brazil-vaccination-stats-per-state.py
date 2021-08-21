@@ -76,7 +76,7 @@ if os.path.exists(file):
             f.write(r.content.decode())
     else:
         print(f"     [+] The file didn't change")
-        # exit()
+        exit()
 else:
     print(f'     [+] File doesnt exist. Saving..')
     with open(file, 'w') as f:
