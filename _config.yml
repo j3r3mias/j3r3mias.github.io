@@ -15,11 +15,11 @@ plugins:
 
 defaults:
     - scope:
-        path:           "payloads/**"
+        path:           "radioamc/**"
         values:
             sitemap:    false
     - scope:
-        path:           "radioamc/**"
+        path:           "payloads/**"
         values:
             sitemap:    false
 
