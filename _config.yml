@@ -14,8 +14,7 @@ plugins:
     - jekyll-sitemap
 
 defaults:
-    -
-        scope:
-            path:       "payloads/**"
+    - scope:
+        path:           "payloads/**"
         values:
             sitemap:    false
