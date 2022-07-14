@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!-- This file was created with the aha Ansi HTML Adapter. https://github.com/theZiz/aha -->
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="application/xml+xhtml; charset=UTF-8" />
+<title>stdin</title>
+</head>
+<body style="background:black">
+<pre>
+<span style="font-weight:bold;"></span><span style="font-weight:bold;color:dimgray;">[19703]</span><span style="font-weight:bold;color:blue;"> </span><span style="font-weight:bold;color:green;">j3r3mias</span><span style="font-weight:bold;color:dimgray;">@</span><span style="font-weight:bold;color:blue;">serenity</span><span style="font-weight:bold;color:dimgray;">:</span><span style="font-weight:bold;color:red;">misc-segfault-labyrinth</span><span style="font-weight:bold;color:purple;"> </span><span style="font-weight:bold;color:dimgray;">&gt;</span><span style="color:white;"></span><span style="color:white;background-color:black;"> seccomp-tools dump ./challenge
+Welcome to the Segfault Labyrinth
+ line  CODE  JT   JF      K
+=================================
+ 0000: 0x20 0x00 0x00 0x00000004  A = arch
+ 0001: 0x15 0x01 0x00 0xc000003e  if (A == </span><span style="color: rgb(255,255,215);background-color:black;">ARCH_X86_64</span><span style="color:white;background-color:black;">) goto 0003
+ 0002: 0x06 0x00 0x00 0x00000000  return KILL
+ 0003: 0x20 0x00 0x00 0x00000000  A = sys_number
+ 0004: 0x15 0x00 0x01 0x0000000f  if (A != </span><span style="color: rgb(135,255,135);background-color:black;">rt_sigreturn</span><span style="color:white;background-color:black;">) goto 0006
+ 0005: 0x06 0x00 0x00 0x7fff0000  return ALLOW
+ 0006: 0x15 0x00 0x01 0x000000e7  if (A != </span><span style="color: rgb(135,255,135);background-color:black;">exit_group</span><span style="color:white;background-color:black;">) goto 0008
+ 0007: 0x06 0x00 0x00 0x7fff0000  return ALLOW
+ 0008: 0x15 0x00 0x01 0x0000003c  if (A != </span><span style="color: rgb(135,255,135);background-color:black;">exit</span><span style="color:white;background-color:black;">) goto 0010
+ 0009: 0x06 0x00 0x00 0x7fff0000  return ALLOW
+ 0010: 0x15 0x00 0x01 0x00000000  if (A != </span><span style="color: rgb(135,255,135);background-color:black;">read</span><span style="color:white;background-color:black;">) goto 0012
+ 0011: 0x06 0x00 0x00 0x7fff0000  return ALLOW
+ 0012: 0x15 0x00 0x01 0x00000009  if (A != </span><span style="color: rgb(135,255,135);background-color:black;">mmap</span><span style="color:white;background-color:black;">) goto 0014
+ 0013: 0x06 0x00 0x00 0x7fff0000  return ALLOW
+ 0014: 0x15 0x00 0x01 0x0000000b  if (A != </span><span style="color: rgb(135,255,135);background-color:black;">munmap</span><span style="color:white;background-color:black;">) goto 0016
+ 0015: 0x06 0x00 0x00 0x7fff0000  return ALLOW
+ 0016: 0x15 0x00 0x01 0x00000005  if (A != </span><span style="color: rgb(135,255,135);background-color:black;">fstat</span><span style="color:white;background-color:black;">) goto 0018
+ 0017: 0x06 0x00 0x00 0x7fff0000  return ALLOW
+ 0018: 0x15 0x00 0x01 0x00000004  if (A != </span><span style="color: rgb(135,255,135);background-color:black;">stat</span><span style="color:white;background-color:black;">) goto 0020
+ 0019: 0x06 0x00 0x00 0x7fff0000  return ALLOW
+ 0020: 0x15 0x00 0x01 0x00000001  if (A != </span><span style="color: rgb(135,255,135);background-color:black;">write</span><span style="color:white;background-color:black;">) goto 0022
+ 0021: 0x06 0x00 0x00 0x7fff0000  return ALLOW
+ 0022: 0x06 0x00 0x00 0x00000000  return KILL
+</span><span style="font-weight:bold;color:black;background-color:black;"></span><span style="font-weight:bold;color:dimgray;background-color:black;">[19704]</span><span style="font-weight:bold;color:blue;background-color:black;"> </span><span style="font-weight:bold;color:green;background-color:black;">j3r3mias</span><span style="font-weight:bold;color:dimgray;background-color:black;">@</span><span style="font-weight:bold;color:blue;background-color:black;">serenity</span><span style="font-weight:bold;color:dimgray;background-color:black;">:</span><span style="font-weight:bold;color:red;background-color:black;">misc-segfault-labyrinth</span><span style="font-weight:bold;color:purple;background-color:black;"> </span><span style="font-weight:bold;color:dimgray;background-color:black;">&gt;</span><span style="color:white;"></span><span style="color:white;background-color:black;">
+</span>
+</pre>
+</body>
+</html>
