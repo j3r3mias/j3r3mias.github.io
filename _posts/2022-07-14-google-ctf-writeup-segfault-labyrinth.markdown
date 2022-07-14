@@ -73,8 +73,8 @@ of the challenge. The second variable (with value 10) I called `corridor` that
 represents the number of corridors the labyrinth will have at the end. From this
 point ahead all snippets are part of a big `while` loop that when some condition
 do not holds, the program ends the execution. If you check the
-[https://github.com/google/google-ctf/blob/master/2022/misc-segfault-labyrinth/challenge/challenge.c](original
-code) from the creator of the challenge, the code organization is very different
+[original code](https://github.com/google/google-ctf/blob/master/2022/misc-segfault-labyrinth/challenge/challenge.c)
+from the creator of the challenge, the code organization is very different
 (modular functions, constants, etc) but we need to fight with the weapons we
 have.
 
@@ -119,7 +119,7 @@ using `rand_var` with the bits "left-shifted" 12 positions. Also the protections
 of this page uses `v9` times 3 where if the value is 1, then the protection will
 be the value 3 that is `PROT_READ` and `PROT_WRITE`, and if the value is 0, the
 protection is `PROT_NONE` (pages cannot be accessed) (again, check the
-[https://github.com/google/google-ctf/blob/master/2022/misc-segfault-labyrinth/challenge/challenge.c#L97](original)
+[original](https://github.com/google/google-ctf/blob/master/2022/misc-segfault-labyrinth/challenge/challenge.c#L97)
 to see how different a decompiler can be). 
 
 Outside the loop, the only writable door will now be the entry-point to the next
@@ -210,7 +210,7 @@ The process has its `syscalls` restricted to `exit*`, `read`, `mmap`, `munmap`,
 `fstat`, `stat` and `write`. The next instructions read a value to `ptr[0]` that
 is the length of our payload.
 
-```
+```c
     for ( j = 0LL; j <= 7; j += read(0, ptr, 8 - j) )
       ;
     if ( j == 8 )
@@ -236,8 +236,8 @@ RUN_SHELLCODE_LABEL:
 
 ```
 
-Finally, our payload is read to the first position after `clear_registers`
-code and the shellcode is called.
+Finally, our payload is read to the first position after `clear_registers` and
+the shellcode is called.
 
 ## Summarizing Everything
 
