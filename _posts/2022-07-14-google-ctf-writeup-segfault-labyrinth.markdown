@@ -32,6 +32,8 @@ challenge trying to show my complete approach in a striped binary.
 
 # Overview
 
+## In-Depth Analysis
+
 The challenge provides a binary called `challenge` that is a stripped ELF
 64-bit. A stripped binary is a program without any debugging symbols. It is
 normally used to reduce the size of the files and make the life of reverse
@@ -239,7 +241,7 @@ RUN_SHELLCODE_LABEL:
 Finally, our payload is read to the first position after `clear_registers` and
 the shellcode is called.
 
-## Summarizing Everything
+## Summarizing
 
 The main idea of the program is create a labyrinth of corridors where a single
 door in a corridor points to the beginning of the next corridor and continues
