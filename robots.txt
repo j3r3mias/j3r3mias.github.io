@@ -10,12 +10,12 @@ Sitemap: {{ site.url }}/sitemap.xml
 {% assign noindexDocuments = site.documents | where: 'sitemap', false %}
 
 {% if noindexDocuments or noindexPages %}
-    {% for node in noindexPages %}
-        Disallow: {{ node.url }}
-    {% endfor %}
-    {% for node in noindexDocuments %}
-        Disallow: {{ node.url }}
-    {% endfor %}
+{% for node in noindexPages %}
+Disallow: {{ node.url }}
+{% endfor %}
+{% for node in noindexDocuments %}
+Disallow: {{ node.url }}
+{% endfor %}
 {% else %}
-    Disallow:
+Disallow:
 {% endif %}
