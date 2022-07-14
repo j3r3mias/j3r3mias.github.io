@@ -244,7 +244,7 @@ the shellcode is called.
 ## Summarizing
 
 The main idea of the program is create a labyrinth of corridors where a single
-door $r_n$ in a corridor $C_n$ points to the beginning of the next corridor
+door $$r_{n}$$ in a corridor $C_{n}$ points to the beginning of the next corridor
 and continues so on until it reaches the flag. The following image illustrate
 this behavior:
 
