@@ -244,17 +244,132 @@ the shellcode is called.
 ## Summarizing
 
 The main idea of the program is create a labyrinth of corridors where a single
-door `Rn` in a corridor `Cm` (where `n` is a random number and `m` is the number
+door `Dn` in a corridor `Cm` (where `n` is a random number and `m` is the number
 of the corridor) points to the beginning of the next corridor and continues so
 on until it reaches the flag. The following image illustrate this behavior:
 
 ![Core idea of a representation of the labyrinth.]({{ site.url  }}/assets/images/gctf-2022-misc-segfault-labyrinth-idea.svg)
 
-
-And also the program receive a payload that is restricted to a few syscalls.
+And also the program receive a payload as input that is restricted to a few
+syscalls.
 
 # Strategies
 
+Once we get the core idea of the binary, there are two approachable strategies
+to the challenge, that I believe follows what the creator intended to do:
+(1) Explore the labyrinth or (2) check each of the fixed mapped addresses.
+
+## Explore the labyrinth
+
+For me, this is the clear one. When you run the program, the payload will be
+combined with `clear_registers` that let us only with an address in the register
+`RDI` that is the entry point of the labyrinth. To check this statement, the
+image below shows an execution where the payload have multiple `\xcc` that
+throws a [SIGTRAP](https://en.wikipedia.org/wiki/Signal_(IPC)#SIGTRAP) in the
+debugger.
+
+![Execution in pwndbg sending multiples `0xcc` as a payload.]({{ site.url  }}/assets/images/gctf-2022-misc-segfault-labyrinth-pwndbg-payload-breakpoint.png)
+
+Now the target is clear, we need a payload that travels through the doors in a
+corridor until we find the one that has writable permissions. To test if a
+memory location is writable, we need to use one of the available to us. There
+are two promising ones (`stat` and `write`). In short:
+
+- `stat` - Return information about a file, in the buffer pointed to by `statbuf`. 
+
+- `write` - writes up to count bytes from the buffer starting at a position in
+  the file referred to by the file descriptor `fd`.
+
+In both cases, when the address is not accessible, it returns an `EFAULT`.
+`EFAULT` is when you try to access or write in a bad address or an outside of
+your accessible address space. To this solution, I choose to use `stat`. The
+payload has three parts.
+
+### Check Doors
+Given a corridor, check each door (address) trying to find which one is writable. 
+Since every corridor has one door that give access to the next corridor, I used
+a infinite loop the breaks when the correct one is found.
+
+```asm-x86
+// Use r15 as the reference to explore
+mov r15, rdi
+// while (1)
+doors_loop:
+    // Use a position after our payload
+    mov rdi, [r15]
+    lea rsi, [rip + 0x300]
+    mov rax, 4
+    syscall
+// compare return with EFAULT (-14)
+    cmp rax, -14
+    jne doors_end_loop
+    add r15, 8
+    jmp doors_loop
+doors_end_loop:
+```
+This uses register `R15` as a reference to explore, copy the address to be
+checked to `RDI` and call `stat` (value 4 in `RAX`). After that, check if the
+returned value is equal to `EFAULT` (-14) and ends the loop when the writable
+address is found. 
+
+### Explore Every Corridor
+
+We also know that with this approach, all corridors need to be traveled. Then
+this part of the code is basically a for loop from `10` to `0`, using `EBX` as a
+counter.
+
+```asm-x86
+mov ebx, 10
+corridors_loop:
+    cmp ebx, 0
+    je end_corridor_exit_labyrinth
+    dec ebx
+
+    // SAME CODE SHOWED IN CHECK DOORS
+
+    doors_end_loop:
+    mov r15, [r15]
+
+    jmp corridors_loop
+
+end_corridor_exit_labyrinth:
+```
+After `Check Doors`, we know that the address in `R15` has as writable address,
+then we can de-reference `R15` that now will points to the next corridor, until
+the last one that points to the flag.
+
+### Read the Flag
+
+In the last part of the code, `RDI` contains the address to our desired flag,
+then we use the `syscall` `WRITE` reading `0x100` bytes to `stdout` and finish
+the payload calling `EXIT` with success. 
+
+```asm-x86
+end_corridor_exit_labyrinth:
+mov rsi, rdi
+mov rdi, 1
+mov rdx, 0x100
+mov rax, 1
+syscall
+mov rax, 0x3c
+xor rdi, rdi
+syscall
+nop
+nop
+nop
+nop
+```
+
+In the end of the code, there are some `NOP`s (no operation) just because if the
+page where payload got copied has some garbage, the last instruction could be
+messed somehow.
+
+### Execution
+
+Getting all the code together (check `writeup-solver-01.py` at the end of this
+article) this is the output:
+
+{% include gctf-2022-misc-segfault-first-execution.html %}
 
 # Final Considerations
 
@@ -456,3 +571,5 @@ LABYRINTH_FAIL:
 - IDA - [https://hex-rays.com/ida-free/](https://hex-rays.com/ida-free/)
 - Secure Computing Mode - [https://en.wikipedia.org/wiki/Seccomp](https://en.wikipedia.org/wiki/Seccomp)
 - seccomp-tools - [https://github.com/david942j/seccomp-tools](https://github.com/david942j/seccomp-tools)
+- stat(2) — Linux manual page - [https://man7.org/linux/man-pages/man2/lstat.2.html](https://man7.org/linux/man-pages/man2/lstat.2.html)
+- write(2) — Linux manual page - [https://man7.org/linux/man-pages/man2/write.2.html](https://man7.org/linux/man-pages/man2/write.2.html)
