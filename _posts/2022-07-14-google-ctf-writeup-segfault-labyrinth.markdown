@@ -98,7 +98,7 @@ for ( i = 0LL; i != 16; ++i )
     fwrite("Error: failed to allocate memory.\n", 1uLL, 0x22uLL, stderr);
     goto LABYRINTH_FAIL;
   }
-  random_value_0_15 = ptr[0];           // useless?
+  random_value_0_15 = ptr[0];         // useless?
 }
 
 labyrinth_p = (_QWORD *)labyrinth_p[LOBYTE(ptr[0])];
