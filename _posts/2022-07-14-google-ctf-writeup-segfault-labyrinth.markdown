@@ -6,6 +6,8 @@ tags: google-ctf reversing reverse-engineering writeup
 toc: true
 ---
 
+{{ content | toc  }}
+
 ## Summary Information
 
 - Name: Segfault Labyrinth
