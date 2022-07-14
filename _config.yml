@@ -37,3 +37,5 @@ plugins:
   - jekyll-feed
   - jekyll-sitemap
   - jekyll-toc
+
+markdown: kramdown
