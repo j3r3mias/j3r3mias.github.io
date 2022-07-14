@@ -200,8 +200,8 @@ else if ( prctl(22, 2LL, &v22) )
 ```
 After the message, there are a lot of constant numbers set in `ptr`. I didn't 
 dug further what is each number. What I did was use the tools the CTF provided
-to help us that is [https://www.google.com](Google). Throwing some number there,
-it returned values used in [https://en.wikipedia.org/wiki/Seccomp](seccomp)
+to help us that is [Google](https://www.google.com). Throwing some number there,
+it returned values used in [seccomp](https://en.wikipedia.org/wiki/Seccomp)
 (it provides a secure state of the calling process dealing with system calls).
 Then I used `seccomp-tools` to collect the rules seccomp is applying to the
 program. This is the output:
