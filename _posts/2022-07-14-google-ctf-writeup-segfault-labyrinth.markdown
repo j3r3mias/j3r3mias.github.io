@@ -6,10 +6,10 @@ tags: google-ctf reversing reverse-engineering writeup
 toc: true
 ---
 
-{{ content }}
+{:toc}
 
 
-## Summary Information
+# Summary Information
 
 - Name: Segfault Labyrinth
 
@@ -24,7 +24,7 @@ toc: true
 
 - Port: 1337
 
-## Overview
+# Overview
 
 The challenge provides a binary that is a stripped ELF 64-bit (why so stripped).
 Checking the security settings using `checksec`, it returns the following:
@@ -34,5 +34,5 @@ Checking the security settings using `checksec`, it returns the following:
 First interesting thing is that the binary has writable segments, what it will
 be useful later.
 
-## Final Considerations
+# Final Considerations
 ...
