@@ -248,6 +248,15 @@ door $$ r_{n} $$ in a corridor $ C_{n} $ points to the beginning of the next cor
 and continues so on until it reaches the flag. The following image illustrate
 this behavior:
 
+Tests: 
+
+- $\sqrt{3x-1}+(1+x)^2$
+- $$\left( \sum_{k=1}^n a_k b_k \right )^2 \leq \left( \sum_{k=1}^n a_k^2 \right ) \left( \sum_{k=1}^n b_k^2 \right )$$
+
+```math
+\sqrt{3}
+```
+
 ![Core idea of a representation of the labyrinth.]({{ site.url  }}/assets/images/gctf-2022-misc-segfault-labyrinth-idea.svg)
 
 
