@@ -37,3 +37,7 @@ plugins:
   - jekyll-feed
   - jekyll-sitemap
   - jekyll-toc
+
+ # Disable button "View on github"
+ github:
+       is_project_page: false
