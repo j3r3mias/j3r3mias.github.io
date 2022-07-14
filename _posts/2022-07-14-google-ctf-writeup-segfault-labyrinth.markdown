@@ -6,7 +6,7 @@ tags: google-ctf reversing reverse-engineering writeup
 toc: true
 ---
 
-{{ content | toc  }}
+{:toc}
 
 ## Summary Information
 
