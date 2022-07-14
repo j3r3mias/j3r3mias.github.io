@@ -37,5 +37,13 @@ Checking the security settings using `checksec`, it returns the following:
 First interesting thing is that the binary has writable segments, what it will
 be useful later.
 
+# Strategies
+
+Given the flaws we saw in the overview, there two main strategies to 
+
 # Final Considerations
 ...
+
+# References
+
+- pwntools (`checksec`) - [https://github.com/Gallopsled/pwntools](https://github.com/Gallopsled/pwntools)
