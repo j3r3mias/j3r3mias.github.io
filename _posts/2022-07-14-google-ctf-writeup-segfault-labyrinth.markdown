@@ -369,7 +369,7 @@ messed somehow.
 Getting all the code together (check `writeup-solver-01.py` at the end of this
 article) this is the output:
 
-{% include gctf-2022-misc-segfault-first-execution.html %}
+{% include gctf-2022-misc-segfault-exploit-01-explore.html %}
 
 # Final Considerations
 
