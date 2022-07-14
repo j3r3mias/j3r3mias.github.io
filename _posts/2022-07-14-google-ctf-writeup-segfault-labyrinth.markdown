@@ -6,8 +6,8 @@ tags: google-ctf reversing reverse-engineering writeup
 toc: true
 ---
 
+* toc
 {:toc}
-
 
 # Summary Information
 
