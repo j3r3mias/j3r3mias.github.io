@@ -256,6 +256,18 @@ Tests:
 ```math
 \sqrt{3}
 ```
+- $a^2 + b^2 = c^2$
+
+- $ x = {-b \pm \sqrt{b^2-4ac} \over 2a} $
+
+$$ x = y ^2 $$
+
+To illustrate math inline, this phrase utilises ‘$’ delimiters: $\sqrt{3x-1}+(1+x)^2$
+
+
+
+
+
 
 ![Core idea of a representation of the labyrinth.]({{ site.url  }}/assets/images/gctf-2022-misc-segfault-labyrinth-idea.svg)
 
