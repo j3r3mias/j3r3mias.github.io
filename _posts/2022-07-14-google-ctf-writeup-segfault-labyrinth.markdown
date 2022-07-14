@@ -245,7 +245,8 @@ The main idea of the program is create a labyrinth of corridors where a single
 door in a corridor points to the beginning of the next corridor and continues
 so on until it reaches the flag. The following image illustrate this behavior:
 
-![Core idea of a representation of the labyrinth.](assets/images/gctf-2022-misc-segfault-labyrinth-idea.svg)
+![Core idea of a representation of the labyrinth.]({{ site.url  }}/assets/images/gctf-2022-misc-segfault-labyrinth-idea.svg)
+
 
 And also the program receive a payload that is restricted to a few syscalls.
 
