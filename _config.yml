@@ -8,7 +8,7 @@ twitter_username: j3r3m14s
 github_username:  j3r3mias
 
 # Build settings
-theme: hacker
+theme: jekyll-theme-hacker
 plugins:
   - jekyll-feed
 
