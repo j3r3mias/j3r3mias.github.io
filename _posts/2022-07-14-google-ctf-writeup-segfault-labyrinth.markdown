@@ -244,30 +244,9 @@ the shellcode is called.
 ## Summarizing
 
 The main idea of the program is create a labyrinth of corridors where a single
-door $$ r_{n} $$ in a corridor $ C_{n} $ points to the beginning of the next corridor
-and continues so on until it reaches the flag. The following image illustrate
-this behavior:
-
-Tests: 
-
-- $\sqrt{3x-1}+(1+x)^2$
-- $$\left( \sum_{k=1}^n a_k b_k \right )^2 \leq \left( \sum_{k=1}^n a_k^2 \right ) \left( \sum_{k=1}^n b_k^2 \right )$$
-
-```math
-\sqrt{3}
-```
-- `$a^2 + b^2 = c^2$`
-
-- `$ x = {-b \pm \sqrt{b^2-4ac} \over 2a} $`
-
-`$$ x = y ^2 $$`
-
-To illustrate math inline, this phrase utilises ‘$’ delimiters: $\sqrt{3x-1}+(1+x)^2$
-
-
-
-
-
+door `Rn` in a corridor `Cm` (where `n` is a random number and `m` is the number
+of the corridor) points to the beginning of the next corridor and continues so
+on until it reaches the flag. The following image illustrate this behavior:
 
 ![Core idea of a representation of the labyrinth.]({{ site.url  }}/assets/images/gctf-2022-misc-segfault-labyrinth-idea.svg)
 
