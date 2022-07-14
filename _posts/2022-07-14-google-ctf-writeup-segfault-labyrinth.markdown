@@ -6,6 +6,9 @@ tags: google-ctf reversing reverse-engineering writeup
 toc: true
 ---
 
+# Table of Contents
+{:.no_toc}
+
 * toc
 {:toc}
 
