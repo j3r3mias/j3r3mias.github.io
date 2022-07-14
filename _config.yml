@@ -24,3 +24,5 @@ defaults:
             sitemap:    false
 
 
+
+theme: jekyll-theme-hacker
