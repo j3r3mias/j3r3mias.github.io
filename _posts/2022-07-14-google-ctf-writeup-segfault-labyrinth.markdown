@@ -378,7 +378,7 @@ article) this is the output:
 ## IDA Disassembly
 
 {% highlight c %}
-nt64 __fastcall main(int a1, char **a2, char **a3)
+int64 __fastcall main(int a1, char **a2, char **a3)
 {
   FILE *urandom_fd;
   unsigned __int64 corridor;
