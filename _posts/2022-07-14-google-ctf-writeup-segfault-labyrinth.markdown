@@ -183,7 +183,8 @@ found in `.data` and renamed properly.
 
 Now the program finally send the first output that is the welcome message.
 
-{% highlight asm %}
+{% highlight c %}
+
 puts("Welcome to the Segfault Labyrinth");
 ptr[6] = 0xE701000015LL;
 ptr[0] = 0x400000020LL;
@@ -215,7 +216,7 @@ The process has its `syscalls` restricted to `exit*`, `read`, `mmap`, `munmap`,
 `fstat`, `stat` and `write`. The next instructions read a value to `ptr[0]` that
 is the length of our payload.
 
-{% highlight asm %}
+{% highlight c %}
     for ( j = 0LL; j <= 7; j += read(0, ptr, 8 - j) )
       ;
     if ( j == 8 )
