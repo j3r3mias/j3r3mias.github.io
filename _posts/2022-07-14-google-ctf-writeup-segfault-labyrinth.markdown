@@ -292,16 +292,16 @@ Since every corridor has one door that give access to the next corridor, I used
 a infinite loop the breaks when the correct one is found.
 
 ```nasm
-// Use r15 as the reference to explore
+; Use r15 as the reference to explore
 mov r15, rdi
-// while (1)
+; while (1)
 doors_loop:
     // Use a position after our payload
     mov rdi, [r15]
     lea rsi, [rip + 0x300]
     mov rax, 4
     syscall
-// compare return with EFAULT (-14)
+; compare return with EFAULT (-14)
     cmp rax, -14
     jne doors_end_loop
     add r15, 8
@@ -326,7 +326,7 @@ corridors_loop:
     je end_corridor_exit_labyrinth
     dec ebx
 
-    // SAME CODE SHOWED IN CHECK DOORS
+    ; SAME CODE SHOWED IN CHECK DOORS
 
     doors_end_loop:
     mov r15, [r15]
