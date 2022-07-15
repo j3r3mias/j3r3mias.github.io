@@ -259,7 +259,7 @@ Once we get the core idea of the binary, there are two approachable strategies
 to the challenge, that I believe follows what the creator intended to do:
 (1) Explore the labyrinth or (2) check each of the fixed mapped addresses.
 
-## Explore the labyrinth
+## 1 - Explore the Labyrinth
 
 For me, this is the clear one. When you run the program, the payload will be
 combined with `clear_registers` that let us only with an address in the register
@@ -283,7 +283,8 @@ are two promising ones (`stat` and `write`). In short:
 In both cases, when the address is not accessible, it returns an `EFAULT`.
 `EFAULT` is when you try to access or write in a bad address or an outside of
 your accessible address space. To this solution, I choose to use `stat`. The
-payload has three parts.
+payload has three parts: `Check Doors`, `Explore Every Corridor` and `Read the
+Falg`.
 
 ### Check Doors
 Given a corridor, check each door (address) trying to find which one is writable. 
@@ -366,7 +367,12 @@ messed somehow.
 
 ### Execution
 
-Getting all the code together (check `writeup-solver-01.py` at the end of this
+Getting all the code together, the following image shows how this approach
+should works:
+
+![Visualization of how the strategy works.]({{ site.url  }}/assets/images/gctf-2022-misc-segfault-labyrinth-example-animation.gif)
+
+And running the solution (check `writeup-solver-01.py` at the end of this
 article) this is the output:
 
 {% include gctf-2022-misc-segfault-exploit-01-explore.html %}
