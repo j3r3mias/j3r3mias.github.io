@@ -61,14 +61,14 @@ end of this article.
 The first thing the program does is to open `/dev/urandom`, and create a page
 with `0x1000` bytes that is allowed to read and write content (third parameter). 
 
-```c
+{% highlight c %}
 urandom_fd = fopen("/dev/urandom", "r");
 if ( urandom_fd )
 {
   corridor = 10LL;
   labyrinth = mmap(0LL, 0x1000uLL, 3, 34, -1, 0LL);
   labyrinth_p = labyrinth;
-```
+{% endhighlight %}
 
 I renamed this variable to `labyrinth` because this pointer is the entry-point
 of the challenge. The second variable (with value 10) I called `corridor` that
@@ -83,7 +83,7 @@ have.
 The next part read a byte from `urandom` and limit the value from `0` to `15`,
 saving the value in `ptr[0]` (couldn't think in a better name to this variable).
 
-```c
+{% highlight c %}
 v6 = fread(ptr, 1uLL, 1uLL, urandom_fd);
 random_value_0_15 = ptr[0] & 0xF;     // restrict random
 LOBYTE(ptr[0]) &= 0xFu;
@@ -109,7 +109,7 @@ if ( !labyrinth_p )
 if ( !--corridor )
 {
 ... 
-```
+{% endhighlight %}
 
 After that, it starts a loop of 16 iterations (using `i` as the counter) where
 it checks if the value of `i` is the same as the picked value in
@@ -131,7 +131,7 @@ reference) with new 16 doors where only a single door will be writable again.
 This pattern continues until the last corridor (`0`) when the `if` finally
 branch in.
 
-```c
+{% highlight c %}
 if ( !--corridor )
 {
   fclose(urandom_fd);
@@ -149,7 +149,7 @@ if ( !--corridor )
         clear_registers_size = &clear_registers_end - (_UNKNOWN *)clear_registers;
         memcpy(shellcode, clear_registers, &clear_registers_end - (_UNKNOWN *)clear_registers);
         puts("Welcome to the Segfault Labyrinth");
-```
+{% endhighlight %}
 
 Now, after the last corridor, the flag is read to the last writable door. Then
 the code allocate a page to receive our shellcode after a part that clears all
@@ -157,7 +157,7 @@ the code allocate a page to receive our shellcode after a part that clears all
 found in `.data` and renamed properly.
 
 
-```asm-x86
+{% highlight asm %}
 .data:0000000000004088 ; =============== S U B R O U T I N E ==============
 .data:0000000000004088
 .data:0000000000004088 clear_registers proc near
@@ -177,11 +177,11 @@ found in `.data` and renamed properly.
 .data:00000000000040AF                 xor     r14, r14
 .data:00000000000040B2                 xor     r15, r15
 .data:00000000000040B2 clear_registers endp
-```
+{% endhighlight %}
 
 Now the program finally send the first output that is the welcome message.
 
-```c
+{% highlight asm %}
 puts("Welcome to the Segfault Labyrinth");
 ptr[6] = 0xE701000015LL;
 ptr[0] = 0x400000020LL;
@@ -197,7 +197,8 @@ else if ( prctl(22, 2LL, &v22) )
   perror("prctl(PR_SET_SECCOMP)");
 }
 
-```
+{% endhighlight %}
+
 After the message, there are a lot of constant numbers set in `ptr`. I didn't 
 dug further what is each number. What I did was use the tools the CTF provided
 to help us that is [Google](https://www.google.com). Throwing some number there,
@@ -212,7 +213,7 @@ The process has its `syscalls` restricted to `exit*`, `read`, `mmap`, `munmap`,
 `fstat`, `stat` and `write`. The next instructions read a value to `ptr[0]` that
 is the length of our payload.
 
-```c
+{% highlight asm %}
     for ( j = 0LL; j <= 7; j += read(0, ptr, 8 - j) )
       ;
     if ( j == 8 )
@@ -235,8 +236,7 @@ RUN_SHELLCODE_LABEL:
         shellcode_p(labyrinth);
       }
     }
-
-```
+{% endhighlight %}
 
 Finally, our payload is read to the first position after `clear_registers` and
 the shellcode is called.
@@ -253,7 +253,7 @@ on until it reaches the flag. The following image illustrate this behavior:
 And also the program receive a payload as input that is restricted to a few
 syscalls.
 
-# Strategies
+# Strategies and Solutions
 
 Once we get the core idea of the binary, there are two approachable strategies
 to the challenge, that I believe follows what the creator intended to do:
@@ -272,8 +272,8 @@ debugger.
 
 Now the target is clear, we need a payload that travels through the doors in a
 corridor until we find the one that has writable permissions. To test if a
-memory location is writable, we need to use one of the available to us. There
-are two promising ones (`stat` and `write`). In short:
+memory location is writable, we need to use one of _syscalls_ the available to
+us. There are two promising ones (`stat` and `write`). In short:
 
 - `stat` - Return information about a file, in the buffer pointed to by `statbuf`. 
 
