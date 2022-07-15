@@ -157,7 +157,7 @@ the code allocate a page to receive our shellcode after a part that clears all
 found in `.data` and renamed properly.
 
 
-{% highlight asm %}
+{% highlight nasm %}
 .data:0000000000004088 ; =============== S U B R O U T I N E ==============
 .data:0000000000004088
 .data:0000000000004088 clear_registers proc near
@@ -291,7 +291,7 @@ Given a corridor, check each door (address) trying to find which one is writable
 Since every corridor has one door that give access to the next corridor, I used
 a infinite loop the breaks when the correct one is found.
 
-```asm-x86
+```nasm
 // Use r15 as the reference to explore
 mov r15, rdi
 // while (1)
