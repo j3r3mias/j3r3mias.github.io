@@ -321,7 +321,7 @@ We also know that with this approach, all corridors need to be traveled. Then
 this part of the code is basically a for loop from `10` to `0`, using `EBX` as a
 counter.
 
-```nasm
+{% highlight nasm %}
 mov ebx, 10
 corridors_loop:
     cmp ebx, 0
@@ -336,7 +336,8 @@ corridors_loop:
     jmp corridors_loop
 
 end_corridor_exit_labyrinth:
-```
+{% endhighlight %}
+
 After `Check Doors`, we know that the address in `R15` has as writable address,
 then we can de-reference `R15` that now will points to the next corridor, until
 the last one that points to the flag.
@@ -347,7 +348,7 @@ In the last part of the code, `RDI` contains the address to our desired flag,
 then we use the `syscall` `WRITE` reading `0x100` bytes to `stdout` and finish
 the payload calling `EXIT` with success. 
 
-```nasm
+{% highlight nasm %}
 end_corridor_exit_labyrinth:
 mov rsi, rdi
 mov rdi, 1
@@ -361,7 +362,7 @@ nop
 nop
 nop
 nop
-```
+{% endhighlight %}
 
 In the end of the code, there are some `NOP`s (no operation) just because if the
 page where payload got copied has some garbage, the last instruction could be
