@@ -159,7 +159,7 @@ the code allocate a page to receive our shellcode after a part that clears all
 found in `.data` and renamed properly.
 
 
-{% highlight nasm %}
+```x86asm
 .data:0000000000004088 ; =============== S U B R O U T I N E ==============
 .data:0000000000004088
 .data:0000000000004088 clear_registers proc near
@@ -179,12 +179,11 @@ found in `.data` and renamed properly.
 .data:00000000000040AF                 xor     r14, r14
 .data:00000000000040B2                 xor     r15, r15
 .data:00000000000040B2 clear_registers endp
-{% endhighlight %}
+```
 
 Now the program finally send the first output that is the welcome message.
 
 {% highlight c %}
-
 puts("Welcome to the Segfault Labyrinth");
 ptr[6] = 0xE701000015LL;
 ptr[0] = 0x400000020LL;
@@ -199,7 +198,6 @@ else if ( prctl(22, 2LL, &v22) )
 {
   perror("prctl(PR_SET_SECCOMP)");
 }
-
 {% endhighlight %}
 
 After the message, there are a lot of constant numbers set in `ptr`. I didn't 
@@ -294,12 +292,12 @@ Given a corridor, check each door (address) trying to find which one is writable
 Since every corridor has one door that give access to the next corridor, I used
 a infinite loop the breaks when the correct one is found.
 
-```nasm
+```x86asm
 ; Use r15 as the reference to explore
 mov r15, rdi
 ; while (1)
 doors_loop:
-    // Use a position after our payload
+    ; Use a position after our payload
     mov rdi, [r15]
     lea rsi, [rip + 0x300]
     mov rax, 4
@@ -322,7 +320,7 @@ We also know that with this approach, all corridors need to be traveled. Then
 this part of the code is basically a for loop from `10` to `0`, using `EBX` as a
 counter.
 
-```asmx86
+```asmasm
 mov ebx, 10
 corridors_loop:
     cmp ebx, 0
@@ -348,7 +346,7 @@ In the last part of the code, `RDI` contains the address to our desired flag,
 then we use the `syscall` `WRITE` reading `0x100` bytes to `stdout` and finish
 the payload calling `EXIT` with success. 
 
-```asmx86
+```avrasm
 end_corridor_exit_labyrinth:
 mov rsi, rdi
 mov rdi, 1
