@@ -348,7 +348,7 @@ In the last part of the code, `RDI` contains the address to our desired flag,
 then we use the `syscall` `WRITE` reading `0x100` bytes to `stdout` and finish
 the payload calling `EXIT` with success. 
 
-```assembly
+{% highlight nasm %}
 end_corridor_exit_labyrinth:
 mov rsi, rdi
 mov rdi, 1
@@ -362,7 +362,7 @@ nop
 nop
 nop
 nop
-```
+{% endhighlight %}
 
 In the end of the code, there are some `NOP`s (no operation) just because if the
 page where payload got copied has some garbage, the last instruction could be
