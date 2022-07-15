@@ -319,7 +319,7 @@ We also know that with this approach, all corridors need to be traveled. Then
 this part of the code is basically a for loop from `10` to `0`, using `EBX` as a
 counter.
 
-```asm-x86
+```asmx86
 mov ebx, 10
 corridors_loop:
     cmp ebx, 0
@@ -345,7 +345,7 @@ In the last part of the code, `RDI` contains the address to our desired flag,
 then we use the `syscall` `WRITE` reading `0x100` bytes to `stdout` and finish
 the payload calling `EXIT` with success. 
 
-```asm-x86
+```asmx86
 end_corridor_exit_labyrinth:
 mov rsi, rdi
 mov rdi, 1
