@@ -132,6 +132,7 @@ This pattern continues until the last corridor (`0`) when the `if` finally
 branch in.
 
 {% highlight c %}
+
 if ( !--corridor )
 {
   fclose(urandom_fd);
@@ -149,6 +150,7 @@ if ( !--corridor )
         clear_registers_size = &clear_registers_end - (_UNKNOWN *)clear_registers;
         memcpy(shellcode, clear_registers, &clear_registers_end - (_UNKNOWN *)clear_registers);
         puts("Welcome to the Segfault Labyrinth");
+
 {% endhighlight %}
 
 Now, after the last corridor, the flag is read to the last writable door. Then
