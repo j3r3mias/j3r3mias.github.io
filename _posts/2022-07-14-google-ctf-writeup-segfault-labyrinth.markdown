@@ -292,7 +292,7 @@ Given a corridor, check each door (address) trying to find which one is writable
 Since every corridor has one door that give access to the next corridor, I used
 a infinite loop the breaks when the correct one is found.
 
-```asm
+{% highlight nasm %}
 ; Use r15 as the reference to explore
 mov r15, rdi
 ; while (1)
@@ -308,7 +308,8 @@ doors_loop:
     add r15, 8
     jmp doors_loop
 doors_end_loop:
-```
+{% endhighlight %}
+
 This uses register `R15` as a reference to explore, copy the address to be
 checked to `RDI` and call `stat` (value 4 in `RAX`). After that, check if the
 returned value is equal to `EFAULT` (-14) and ends the loop when the writable
@@ -320,7 +321,7 @@ We also know that with this approach, all corridors need to be traveled. Then
 this part of the code is basically a for loop from `10` to `0`, using `EBX` as a
 counter.
 
-```mipsasm
+```nasm
 mov ebx, 10
 corridors_loop:
     cmp ebx, 0
@@ -346,7 +347,7 @@ In the last part of the code, `RDI` contains the address to our desired flag,
 then we use the `syscall` `WRITE` reading `0x100` bytes to `stdout` and finish
 the payload calling `EXIT` with success. 
 
-```asm-x86
+```nasm
 end_corridor_exit_labyrinth:
 mov rsi, rdi
 mov rdi, 1
