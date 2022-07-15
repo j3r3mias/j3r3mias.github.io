@@ -377,7 +377,7 @@ article) this is the output:
 
 ## IDA Disassembly
 
-```c
+{% highlight c %}
 nt64 __fastcall main(int a1, char **a2, char **a3)
 {
   FILE *urandom_fd;
@@ -560,7 +560,7 @@ LABYRINTH_FAIL:
   }
   return return_code;
 }
-```
+{% endhighlight %}
 
 ...
 
