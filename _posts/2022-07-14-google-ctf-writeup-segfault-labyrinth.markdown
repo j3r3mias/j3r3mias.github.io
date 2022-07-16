@@ -283,7 +283,7 @@ statement, the image below shows an execution where the payload have multiple
 
 Now the target is clear, we need a payload that travels through the doors in a
 corridor until we find the one that has writable permissions. To test if a
-memory location is writable, we need to use one of _syscalls_ the available to
+memory location is writable, we need to use one of the _syscalls_ available to
 us. There are two promising ones (`stat` and `write`). In short:
 
 - `stat` - Return information about a file, in the buffer pointed to by `statbuf`. 
