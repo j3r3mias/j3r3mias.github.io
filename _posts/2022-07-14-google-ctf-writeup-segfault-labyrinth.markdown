@@ -248,7 +248,7 @@ RUN_SHELLCODE_LABEL:
     }
 {% endhighlight %}
 
-Finally, our payload is read to the first position after `clear_registers` and
+Then our payload is written to the first position after `clear_registers` and
 the shellcode is called.
 
 ### Summarizing
