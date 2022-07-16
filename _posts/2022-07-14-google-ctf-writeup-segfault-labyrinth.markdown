@@ -40,18 +40,18 @@ approach and understand a striped binary.
 
 The challenge provides a binary called `challenge` that is a stripped `ELF
 64-bit`. A stripped binary is a program without any debugging symbols. It is
-normally used to reduce the size of the files and make the life of reverse
+normally used to reduce the size of the files and make the life of reversing
 engineers ~~a living hell~~ more difficult (and also responsible for most part
 of my headaches). First things first, checking the security settings using
 `checksec`, it returns the following:
 
 {% include gctf-2022-misc-segfault-checksec.html %}
 
-In the output the major thing to pay attention is that the binary has writable
-segments, that will be important later. Besides that it also has executable
-stack (NX disabled) and no presence of canary, what is a good thing in a
-challenge with "segfault" in the name. Trying to execute the binary, it shows
-this:
+In this output a big thing to pay attention is that the binary has writable
+segments meaning that probably `mmap` is being used to create pages that you can
+modify the content. Besides that it also has executable stack (`NX disabled`)
+and no presence of canary, what is a good thing in a challenge with "*segfault*"
+in the name. Trying to execute the binary, this is the output:
 
 {% include gctf-2022-misc-segfault-first-execution.html %}
 
