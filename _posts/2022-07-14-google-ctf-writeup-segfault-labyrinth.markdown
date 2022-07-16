@@ -21,7 +21,7 @@ challenge trying to show my complete approach in a striped binary.
 
 - Name: Segfault Labyrinth
 
-- Author: Carl Svensson
+- Author: [Calle Svensson](https://twitter.com/ZetaTwo)
 
 - Category: Reversing
 
@@ -397,7 +397,7 @@ between different runs is because the writable doors are chosen using
 
 To take advantage of that we can use the
 [`libc`](https://man7.org/linux/man-pages/man7/libc.7.html) to previous
-calculate the starting address of all `160` doors (10 corridors `*` 16 doors per
+calculate the starting address of all 160 doors (10 corridors * 16 doors per
 each). The following snippet build a list with all starting addresses:
 
 {% highlight python %}
@@ -449,10 +449,11 @@ nop
 '''
 {% endhighlight %}
 
-The loop in the code just creates a block of code that test each one of the last 
-16 doors appending to the payload. When the right one is found, the program jumps 
-to the label `print_flag`, write the flag and exit successfully. The full 
-solution code can be found at the end of this article.
+The loop in the code just creates a block of code that test each one of the
+last 16 doors appending it to `payload`. When the right one is found, the
+program jumps to the label `print_flag`, write the flag to `stdout` and exit
+successfully. The [full solution](## 02 - Exploit 02 - Rage Against the Random)
+can be checked at the end of this article.
 
 ## 3 - Bonus: Lazy CTF Player
 
