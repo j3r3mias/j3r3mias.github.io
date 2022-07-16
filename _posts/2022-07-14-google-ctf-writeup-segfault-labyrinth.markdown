@@ -213,9 +213,9 @@ program. This is the output:
 
 {% include gctf-2022-misc-segfault-seccomp-tools.html %}
 
-The process has its `syscalls` restricted to `exit*`, `read`, `mmap`, `munmap`,
-`fstat`, `stat` and `write`. The next instructions read a value to `ptr[0]` that
-is the length of our payload.
+The process has its `syscalls` restricted to `rt_sigreturn`, `exit`, `read`,
+`mmap`, `munmap`, `fstat`, `stat` and `write`. The next instructions read a
+value to `ptr[0]` that is the length of our payload.
 
 {% highlight c %}
     for ( j = 0LL; j <= 7; j += read(0, ptr, 8 - j) )
@@ -457,15 +457,14 @@ can be checked at the end of this article.
 
 ### 03 - Bonus: Lazy CTF Player
 
-[This is](#03---exploit-03---lazy-ctf-player-bonus) one of that solutions you
-are proudly ashamed of yourself during CTFs, but it works. Using some
-consolidation of the previous two solutions, this one just guess on of the last
-16 doors and repeatedly connects to the server trying to read always the same
-address again and again until that one address is picked as the one with flag.
-Since we only need to pick an address between 16 doors, `6%` of chances to hit
-the jackpot is very doable even if the contest use some kind of
-[PoW](https://en.wikipedia.org/wiki/Proof_of_work) (Prof of Work). Now the
-payload is reduced (22 bytes) to:
+This is one of that solutions you are proudly ashamed of yourself during CTFs,
+but it works. Using some consolidation of the previous two solutions, this one
+just guess one of the last 16 doors and repeatedly connects to the server trying
+always to read the same picked address again and again until that one is
+picked to contains the flag.  Since we only need to pick an address between 16
+doors, `6%` of chances to hit the jackpot is very doable even if the contest
+use some kind of [PoW](https://en.wikipedia.org/wiki/Proof_of_work) (Prof of
+Work). Now the payload is reduced (22 bytes) to:
 
 {% highlight nasm %}
 mov rsi, GUESS_ADDRESS
@@ -476,7 +475,12 @@ syscall
 nop
 {% endhighlight %}
 
-Not the most beautiful one but flag is flag! `¯\_(ツ)_/¯`
+Not [the most beautiful one](#03---exploit-03---lazy-ctf-player-bonus) but flag
+is flag! `¯\_(ツ)_/¯`
+
+Check the output:
+
+{% include gctf-2022-misc-segfault-exploit-03-smart-guess.html %}
 
 ## Final Considerations
 
