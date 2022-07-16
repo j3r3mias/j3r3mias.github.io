@@ -451,7 +451,8 @@ nop
 
 The loop in the code just creates a block of code that test each one of the last 
 16 doors appending to the payload. When the right one is found, the program jumps 
-to the label `print_flag`, write the flag and exit successfully.
+to the label `print_flag`, write the flag and exit successfully. The full 
+solution code can be found at the end of this article.
 
 ## 3 - Bonus: Lazy CTF Player
 
