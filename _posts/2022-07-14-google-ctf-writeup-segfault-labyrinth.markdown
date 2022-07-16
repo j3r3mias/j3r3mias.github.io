@@ -133,12 +133,12 @@ and if this result is 1, then the protection will be the value 3 that is
 to see how different a decompiled code can be probably (but not only) because of
 flag optimizations). 
 
-Outside the loop, the only writable door is the accessible point to the next
-corridor. Also, after that, it checks if `corridor` is zero. While not, the
-loop starts again creating a new corridor (using the current accessible point as
-a reference) with new 16 doors where only a single door will be writable again.
-This pattern continues until the last corridor (`0`) when the `if` finally
-branch in.
+Outside the loop, the only door with writable attributes is set in
+`labyrinth_p`.  This is the accessible point to the next corridor. Also, after
+that, it checks if `corridor` is zero. While not, the loop starts again creating
+a new corridor (using the current accessible point as a reference) with new 16
+doors where only a single door will be writable again.  This pattern continues
+until the last corridor (`0`) when the `if` finally branch in.
 
 {% highlight c %}
 
