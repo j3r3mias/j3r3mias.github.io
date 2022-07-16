@@ -60,7 +60,7 @@ There is a message of welcome and the binary hangs waiting for an input and
 nothing more. Then it's ~~morbin~~ reversing time! I chose to use IDA that has
 a very useful disassembly feature. Because the binary is stripped and has no
 symbols to provide any help, I renamed a lot of variables in the decompiled
-code creating a context that helped me to understand better the code. I will
+code creating a context that helped me to understand better what is what. I will
 show some snippets and you can read the [full
 code](#04---ida-disassembly-of-the-binary) at the end of this article.
 
@@ -76,18 +76,19 @@ if ( urandom_fd )
   labyrinth_p = labyrinth;
 {% endhighlight %}
 
-I renamed this variable to `labyrinth` because this pointer is the entry-point
-of the challenge. The second variable (with value 10) I called `corridor` that
-represents the number of corridors the labyrinth will have at the end. From this
-point ahead all snippets are part of a big `while` loop that when some condition
-do not holds, the program ends the execution. If you check the
-[original code](https://github.com/google/google-ctf/blob/master/2022/misc-segfault-labyrinth/challenge/challenge.c)
+I renamed this variable to `labyrinth` because this pointer is the entry point
+for us to the challenge. The second variable (with value 10) I called `corridor`
+that represents the number of corridors the labyrinth will have at the end. From
+this point ahead all snippets are part of a big `while` loop that when some
+condition do not holds, the program ends the execution. If you check the
+[original
+code](https://github.com/google/google-ctf/blob/master/2022/misc-segfault-labyrinth/challenge/challenge.c)
 from the creator of the challenge, the code organization is very different
 (modular functions, constants, etc) but we need to fight with the weapons we
 have.
 
 The next part read a byte from `urandom` and limit the value from `0` to `15`,
-saving the value in `ptr[0]` (couldn't think in a better name to this variable).
+saving the value in `ptr[0]` (I couldn't decide a better name to this variable).
 
 {% highlight c %}
 v6 = fread(ptr, 1uLL, 1uLL, urandom_fd);
