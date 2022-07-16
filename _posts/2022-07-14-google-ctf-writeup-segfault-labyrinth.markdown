@@ -58,7 +58,7 @@ is the output:
 
 There is a message of welcome and the binary hangs waiting for an input and
 nothing more. Then it's ~~morbin~~ reversing time! I choose to use IDA that has
-a very useful disassembly feature. With the disassembly that has no symbols to
+a very handful disassembly feature. With the disassembly that has no symbols to
 help, I renamed a lot of variables creating a context that helped to understand
 better the code. I will show some snippets and you can read the full code at the
 end of this article.
