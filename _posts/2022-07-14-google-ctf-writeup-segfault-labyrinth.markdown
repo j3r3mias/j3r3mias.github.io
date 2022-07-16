@@ -248,8 +248,8 @@ RUN_SHELLCODE_LABEL:
     }
 {% endhighlight %}
 
-Then our payload is written to the first position after `clear_registers` and
-the shellcode is called.
+Then our payload is written to the first position after `clear_registers` and if
+everything is OK the shellcode is called.
 
 ### Summarizing
 
