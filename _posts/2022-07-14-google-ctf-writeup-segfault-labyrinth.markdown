@@ -48,10 +48,11 @@ of my headaches). First things first, checking the security settings using
 {% include gctf-2022-misc-segfault-checksec.html %}
 
 In this output a big thing to pay attention is that the binary has writable
-segments meaning that probably `mmap` is being used to create pages that you can
-modify the content. Besides that it also has executable stack (`NX disabled`)
-and no presence of canary, what is a good thing in a challenge with "*segfault*"
-in the name. Trying to execute the binary, this is the output:
+segments meaning that probably `mmap` is being called to create pages with
+permissions that allow us to write and execute code. Besides that it also has
+executable stack (`NX disabled`) and no presence of canary, what is a good thing
+in a challenge with "*segfault*" in the name. Trying to execute the binary, this
+is the output:
 
 {% include gctf-2022-misc-segfault-first-execution.html %}
 
