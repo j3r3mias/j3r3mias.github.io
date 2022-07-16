@@ -57,11 +57,11 @@ is the output:
 {% include gctf-2022-misc-segfault-first-execution.html %}
 
 There is a message of welcome and the binary hangs waiting for an input and
-nothing more. Then it's ~~morbin~~ reversing time! I choose to use IDA that has
-a very handful disassembly feature. Because the binary is stripped and has no
-symbols to provide any help, I renamed a lot of variables in the disassembly
-code creating a context that helped to understand better the code. I will show
-some snippets and you can read the [full
+nothing more. Then it's ~~morbin~~ reversing time! I chose to use IDA that has
+a very useful disassembly feature. Because the binary is stripped and has no
+symbols to provide any help, I renamed a lot of variables in the decompiled
+code creating a context that helped me to understand better the code. I will
+show some snippets and you can read the [full
 code](#04---ida-disassembly-of-the-binary) at the end of this article.
 
 The first thing the program does is to open `/dev/urandom`, and create a page
