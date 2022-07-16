@@ -21,7 +21,7 @@ challenge trying to show my complete approach in a striped binary.
 
 - Name: Segfault Labyrinth
 
-- Author: [Calle Svensson](https://twitter.com/ZetaTwo)
+- Author: [Calle “Zeta Two” Svensson](https://twitter.com/ZetaTwo)
 
 - Category: Reversing
 
@@ -457,13 +457,13 @@ can be checked at the end of this article.
 
 ### 03 - Bonus: Lazy CTF Player
 
-[This is](#codes) one of that solutions you are proudly ashamed of yourself
-during CTFs, but it works. Using some consolidation of the previous two
-solutions, this one just guess on of the last 16 doors and repeatedly connects
-to the server trying to read always the same address again and again until that
-one address is picked as the one with flag. Since we only need to pick an
-address between 16 doors, `6%` of chances to hit the jackpot is very doable
-even if the contest use some kind of
+[This is](#03---exploit-03---lazy-ctf-player-(bonus)) one of that solutions you
+are proudly ashamed of yourself during CTFs, but it works. Using some
+consolidation of the previous two solutions, this one just guess on of the last
+16 doors and repeatedly connects to the server trying to read always the same
+address again and again until that one address is picked as the one with flag.
+Since we only need to pick an address between 16 doors, `6%` of chances to hit
+the jackpot is very doable even if the contest use some kind of
 [PoW](https://en.wikipedia.org/wiki/Proof_of_work) (Prof of Work). Now the
 payload is reduced (22 bytes) to:
 
