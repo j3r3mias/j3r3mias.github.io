@@ -162,7 +162,7 @@ if ( !--corridor )
 
 {% endhighlight %}
 
-Now, after the last corridor, the flag is to written to the last writable door.
+Now, after the last corridor, the flag is written to the last writable door.
 Then the code allocates a page to receive our shellcode right after a part that
 clears all "useful" registers of the program, except for `RDI`. This
 `clear_registers` were found in `.data` and renamed properly.
@@ -190,7 +190,7 @@ clears all "useful" registers of the program, except for `RDI`. This
 .data:00000000000040B2 clear_registers endp
 ```
 
-Now the program finally send the first output that is the welcome message.
+Finally the program send the first output that is the welcome message.
 
 {% highlight c %}
 puts("Welcome to the Segfault Labyrinth");
@@ -210,18 +210,18 @@ else if ( prctl(22, 2LL, &v22) )
 {% endhighlight %}
 
 After the message, there are a lot of constant numbers set in `ptr`. I didn't 
-dug further what is each number. What I did was use the tools the CTF provided
-to help us that is [Google](https://www.google.com). Throwing some number there,
-it returned values used in [seccomp](https://en.wikipedia.org/wiki/Seccomp)
-(it provides a secure state of the calling process dealing with system calls).
-Then I used `seccomp-tools` to collect the rules seccomp is applying to the
-program. This is the output:
+dug further what is each number. What I did was use one of the tools the CTF
+provided to help us that is [Google](https://www.google.com). Throwing some
+number there, it returned values used in
+[seccomp](https://en.wikipedia.org/wiki/Seccomp) (it provides a secure state of
+the calling process dealing with system calls).  Then I used `seccomp-tools` to
+collect the rules seccomp is applying to the program. This is the output:
 
 {% include gctf-2022-misc-segfault-seccomp-tools.html %}
 
-The process has its `syscalls` restricted to `rt_sigreturn`, `exit`, `read`,
-`mmap`, `munmap`, `fstat`, `stat` and `write`. The next instructions read a
-value to `ptr[0]` that is the length of our payload.
+The process has its `syscalls` restricted to `rt_sigreturn`, `exit_group`,
+`exit`, `read`, `mmap`, `munmap`, `fstat`, `stat` and `write`. The next part of
+the program read a value to `ptr[0]` that is the length of our payload.
 
 {% highlight c %}
     for ( j = 0LL; j <= 7; j += read(0, ptr, 8 - j) )
