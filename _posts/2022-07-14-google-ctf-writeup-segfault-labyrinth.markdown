@@ -123,7 +123,7 @@ it checks if the value of `i` is the same as the picked value in
 `random_value_0_15` and save the result in `v9` (consider this a boolean (`0` or
 `1`)). Then it picks a value from `rand` and save it in `rand_var`. The BIG
 observation here is that `rand` wasn't seeded ([remember this for
-later](#02---rage-against-the-random)). After that a page is created (called
+later](#02---rage-against-the-random)). Thereafter a page is created (called
 here `door`) where the starting address is calculated using `rand_var` with the
 bits "left-shifted" 12 positions. Also the protections of this page uses `v9`
 times 3 where if the value is 1, then the protection will be the value 3 that is
