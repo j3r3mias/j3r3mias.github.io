@@ -6,18 +6,18 @@ tags: ctf google-ctf reversing reverse-engineering writeup
 toc: true
 ---
 
-# Table of Contents
+## Table of Contents
 {:.no_toc}
 
 * toc
 {:toc}
 
-# Introduction
+## Introduction
 
 In this writeup I will describe the journey to finish this reverse engineering
 challenge trying to show my complete approach in a striped binary.  
 
-# Summary Information
+## Summary Information
 
 - Name: Segfault Labyrinth
 
@@ -32,9 +32,9 @@ challenge trying to show my complete approach in a striped binary.
 
 - Port: 1337
 
-# Overview
+## Overview
 
-## In-Depth Analysis
+### In-Depth Analysis
 
 The challenge provides a binary called `challenge` that is a stripped ELF
 64-bit. A stripped binary is a program without any debugging symbols. It is
@@ -245,7 +245,7 @@ RUN_SHELLCODE_LABEL:
 Finally, our payload is read to the first position after `clear_registers` and
 the shellcode is called.
 
-## Summarizing
+### Summarizing
 
 The main idea of the program is create a labyrinth of corridors where a single
 door `Dn` in a corridor `Cm` (where `n` is a random number and `m` is the number
@@ -257,14 +257,14 @@ on until it reaches the flag. The following image illustrate this behavior:
 And also the program receive a payload as input that is restricted to a few
 syscalls.
 
-# Strategies and Solutions
+## Strategies and Solutions
 
 Once we get the core idea of the binary, there are two approachable strategies
 to the challenge, that I believe follows what the creator intended to do:
 (1) Explore the Labyrinth and (2) Rage Against the Random. As a bonus, it will
 be a third one that I called the (3) Lazy CTF Player.
 
-## 1 - Explore the Labyrinth
+### 1 - Explore the Labyrinth
 
 For me, this is the clear one. When you run the program, the payload will be
 combined with `clear_registers` that let us only with an address in the register
@@ -291,7 +291,7 @@ your accessible address space. To this solution, I choose to use `stat`. The
 payload has three parts: `Check Doors`, `Explore Every Corridor` and `Read the
 Falg`.
 
-### Check Doors
+#### Check Doors
 Given a corridor, check each door (address) trying to find which one is writable. 
 Since every corridor has one door that give access to the next corridor, I used
 a infinite loop the breaks when the correct one is found.
@@ -319,7 +319,7 @@ checked to `RDI` and call `stat` (value 4 in `RAX`). After that, check if the
 returned value is equal to `EFAULT` (-14) and ends the loop when the writable
 address is found. 
 
-### Explore Every Corridor
+#### Explore Every Corridor
 
 We also know that with this approach, all corridors need to be traveled. Then
 this part of the code is basically a for loop from `10` to `0`, using `EBX` as a
@@ -346,7 +346,7 @@ After `Check Doors`, we know that the address in `R15` has as writable address,
 then we can de-reference `R15` that now will points to the next corridor, until
 the last one that points to the flag.
 
-### Read the Flag
+#### Read the Flag
 
 In the last part of the code, `RDI` contains the address to our desired flag,
 then we use the `syscall` `WRITE` reading `0x100` bytes to `stdout` and finish
@@ -372,7 +372,7 @@ In the end of the code, there are some `NOP`s (no operation) just because if the
 page where payload got copied has some garbage, the last instruction could be
 messed somehow.
 
-### Execution
+#### Execution
 
 Getting all the code together, the following image shows how this approach
 should works:
@@ -384,7 +384,7 @@ article) this is the output:
 
 {% include gctf-2022-misc-segfault-exploit-01-explore.html %}
 
-## 2 - Rage Against the Random
+### 2 - Rage Against the Random
 
 Like I previous mentioned in the overview, `rand_var` uses the function `rand()` 
 that is not seeded in the code. [The
@@ -455,30 +455,50 @@ program jumps to the label `print_flag`, write the flag to `stdout` and exit
 successfully. The [full solution](exploit-02)
 can be checked at the end of this article.
 
-## 3 - Bonus: Lazy CTF Player
+### 3 - Bonus: Lazy CTF Player
 
-# Final Considerations
+This is one of that solutions you are proudly ashamed of yourself during CTFs,
+but it works. Using some consolidation of the previous two solutions, this one 
+just guess on of the last 16 doors and repeatedly connects to the server trying 
+to read always the same address again and again until that one address is picked 
+as the one with flag. Since we only need to pick an address between 16 doors,
+`6%` of chances to hit the jackpot is very doable even if the contest use some 
+kind of [PoW](https://en.wikipedia.org/wiki/Proof_of_work) (Prof of Work). Now
+the payload is reduced (22 bytes) to:
 
-# Codes
+{% highlight nasm %}
+mov rsi, GUESS_ADDRESS
+mov edi, 1
+mov dl, 0x40
+inc eax
+syscall
+nop
+{% endhighlight %}
 
-## 01 - Exploit 01 - Explore the Labyrinth
+Not the most beautiful one but flag is flag! `¯\_(ツ)_/¯`
+
+## Final Considerations
+
+## Codes
+
+### 01 - Exploit 01 - Explore the Labyrinth
 
 {% gist 18750235e4273e6b591faa56af468d4c writeup-solver-01.py %}
 
-## 02 - Exploit 02 - Rage Against the Random [exploit-02]
+### 02 - Exploit 02 - Rage Against the Random [exploit-02]
 
 {% gist 98f423599b63aa355583104c9a30cad4 writeup-solver-02.py %}
 
-## 03 - Exploit 03 - Lazy CTF Player (Bonus)
+### 03 - Exploit 03 - Lazy CTF Player (Bonus)
 
 ...
 
-## 04 - IDA Disassembly of the Binary
+### 04 - IDA Disassembly of the Binary
 
 {% gist cd019e6cc4788e062c2fd1e411b3f212 gctf-2022-misc-segfault-challenge-disasm.c %}
 
 
-# References
+## References
 
 1. [Google Capture the Flag](https://capturetheflag.withgoogle.com/)
 
@@ -497,3 +517,5 @@ can be checked at the end of this article.
 1. [ISO C Random Number Functions](https://www.gnu.org/software/libc/manual/html_node/ISO-Random.html)
 
 1. [libc(7) — Linux manual page](https://man7.org/linux/man-pages/man7/libc.7.html)
+
+1. [Proof of Work](https://en.wikipedia.org/wiki/Proof_of_work)
