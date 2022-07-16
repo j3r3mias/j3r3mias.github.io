@@ -417,15 +417,17 @@ the content every time the address is writable.
 
 # Codes
 
-## IDA Disassembly of the Binary
+## 01 - IDA Disassembly of the Binary
 
 {% gist cd019e6cc4788e062c2fd1e411b3f212 gctf-2022-misc-segfault-challenge-disasm.c %}
 
-## Exploit 01 - Explore the Labyrinth
+## 02 - Exploit 01 - Explore the Labyrinth
 
 {% gist 18750235e4273e6b591faa56af468d4c writeup-solver-01.py %}
 
-## Exploit 02 - Rage Against the Random
+## 03 - Exploit 02 - Rage Against the Random
+
+{% gist 98f423599b63aa355583104c9a30cad4 writeup-solver-02.py %}
 
 ...
 
