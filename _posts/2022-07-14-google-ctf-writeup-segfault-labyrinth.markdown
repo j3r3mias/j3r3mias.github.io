@@ -162,10 +162,10 @@ if ( !--corridor )
 
 {% endhighlight %}
 
-Now, after the last corridor, the flag is read to the last writable door. Then
-the code allocates a page to receive our shellcode after a part that clears all
-"useful" registers of the program, except for `RDI`. This `clear_registers` were 
-found in `.data` and renamed properly.
+Now, after the last corridor, the flag is to written to the last writable door.
+Then the code allocates a page to receive our shellcode right after a part that
+clears all "useful" registers of the program, except for `RDI`. This
+`clear_registers` were found in `.data` and renamed properly.
 
 
 ```x86asm
