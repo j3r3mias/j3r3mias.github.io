@@ -78,17 +78,17 @@ if ( urandom_fd )
 
 I renamed this variable to `labyrinth` because this pointer is the entry point
 for us to the challenge. The second variable (with value 10) I called `corridor`
-that represents the number of corridors the labyrinth will have at the end. From
-this point ahead all snippets are part of a big `while` loop that when some
-condition do not holds, the program ends the execution. If you check the
-[original
+that represents the number of corridors the labyrinth will have after the
+construction. From this point ahead all snippets are part of a big `while` loop
+that when some condition do not holds, the program ends the execution. If you
+check the [original
 code](https://github.com/google/google-ctf/blob/master/2022/misc-segfault-labyrinth/challenge/challenge.c)
 from the creator of the challenge, the code organization is very different
 (modular functions, constants, etc) but we need to fight with the weapons we
 have.
 
 The next part read a byte from `urandom` and limit the value from `0` to `15`,
-saving the value in `ptr[0]` (I couldn't decide a better name to this variable).
+saving the value in `ptr[0]` (I could not decide a better name to this variable).
 
 {% highlight c %}
 v6 = fread(ptr, 1uLL, 1uLL, urandom_fd);
