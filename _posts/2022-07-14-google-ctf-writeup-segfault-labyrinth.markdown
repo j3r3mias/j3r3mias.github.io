@@ -6,6 +6,8 @@ tags: google-ctf reversing reverse-engineering writeup
 toc: true
 ---
 
+@import "{{ site.theme }}";
+
 In this writeup I will describe the journey to finish this reverse engineering
 challenge trying to show my complete approach in a striped binary.  
 
