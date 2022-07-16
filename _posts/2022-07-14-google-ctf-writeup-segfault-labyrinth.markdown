@@ -288,14 +288,14 @@ us. There are two promising ones (`stat` and `write`). In short:
 
 - `stat` - Return information about a file, in the buffer pointed to by `statbuf`. 
 
-- `write` - writes up `N` bytes from the buffer starting at a position in the
+- `write` - Writes up `N` bytes from the buffer starting at a position in the
   file referred to by the file descriptor `fd`.
 
 In both cases, when the address is not accessible, it returns an `EFAULT`.
 `EFAULT` is when you try to access or write in a bad address or an outside of
 your accessible address space. To this solution, I choose to use `stat`. The
 payload has three parts: `Check Doors`, `Explore Every Corridor` and `Read the
-Falg`.
+Flag`.
 
 #### Check Doors
 Given a corridor, check each door (address) trying to find which one is writable. 
