@@ -2,7 +2,7 @@
 layout: post
 title:  "Google CTF 2022 - Segfault Labyrinth"
 categories: writeup
-tags: google-ctf reversing reverse-engineering writeup
+tags: ctf google-ctf reversing reverse-engineering writeup
 toc: true
 ---
 
@@ -417,27 +417,38 @@ the content every time the address is writable.
 
 # Codes
 
-## 01 - IDA Disassembly of the Binary
-
-{% gist cd019e6cc4788e062c2fd1e411b3f212 gctf-2022-misc-segfault-challenge-disasm.c %}
-
-## 02 - Exploit 01 - Explore the Labyrinth
+## 01 - Exploit 01 - Explore the Labyrinth
 
 {% gist 18750235e4273e6b591faa56af468d4c writeup-solver-01.py %}
 
-## 03 - Exploit 02 - Rage Against the Random
+## 02 - Exploit 02 - Rage Against the Random
 
 {% gist 98f423599b63aa355583104c9a30cad4 writeup-solver-02.py %}
 
+## 03 - Exploit 03 - Lazy CTF Player (Bonus)
+
 ...
+
+## 04 - IDA Disassembly of the Binary
+
+{% gist cd019e6cc4788e062c2fd1e411b3f212 gctf-2022-misc-segfault-challenge-disasm.c %}
+
 
 # References
 
-- Google Capture the Flag - [https://capturetheflag.withgoogle.com/](https://capturetheflag.withgoogle.com/)
-- pwntools (`checksec`) - [https://github.com/Gallopsled/pwntools](https://github.com/Gallopsled/pwntools)
-- IDA - [https://hex-rays.com/ida-free/](https://hex-rays.com/ida-free/)
-- Secure Computing Mode - [https://en.wikipedia.org/wiki/Seccomp](https://en.wikipedia.org/wiki/Seccomp)
-- seccomp-tools - [https://github.com/david942j/seccomp-tools](https://github.com/david942j/seccomp-tools)
-- stat(2) — Linux manual page - [https://man7.org/linux/man-pages/man2/lstat.2.html](https://man7.org/linux/man-pages/man2/lstat.2.html)
-- write(2) — Linux manual page - [https://man7.org/linux/man-pages/man2/write.2.html](https://man7.org/linux/man-pages/man2/write.2.html)
-- ISO C Random Number Functions - [https://www.gnu.org/software/libc/manual/html_node/ISO-Random.html](https://www.gnu.org/software/libc/manual/html_node/ISO-Random.html)
+1. [Google Capture the Flag](https://capturetheflag.withgoogle.com/)
+
+1. [pwntools (`checksec`)](https://github.com/Gallopsled/pwntools)
+
+1. [IDA](https://hex-rays.com/ida-free/)
+
+1. [Secure Computing Mode (Seccomp)](https://en.wikipedia.org/wiki/Seccomp)
+
+1. [seccomp-tools](https://github.com/david942j/seccomp-tools)
+
+1. [stat(2) — Linux manual page](https://man7.org/linux/man-pages/man2/lstat.2.html)
+
+1. [write(2) — Linux manual page](https://man7.org/linux/man-pages/man2/write.2.html)
+
+1. [ISO C Random Number Functions](https://www.gnu.org/software/libc/manual/html_node/ISO-Random.html)
+
