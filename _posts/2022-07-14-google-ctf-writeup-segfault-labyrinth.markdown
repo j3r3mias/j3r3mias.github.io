@@ -258,7 +258,8 @@ syscalls.
 
 Once we get the core idea of the binary, there are two approachable strategies
 to the challenge, that I believe follows what the creator intended to do:
-(1) Explore the labyrinth or (2) check each of the fixed mapped addresses.
+(1) Explore the Labyrinth and (2) Rage Against the Random. As a bonus, it will
+be a third one that I called the (3) Lazy CTF Player.
 
 ## 1 - Explore the Labyrinth
 
@@ -380,198 +381,45 @@ article) this is the output:
 
 {% include gctf-2022-misc-segfault-exploit-01-explore.html %}
 
+## 2 - Rage Against the Random
+
+Like I previous mentioned in the overview, `rand_var` uses the function `rand()` 
+that is not seeded in the code. [The
+documentation](https://www.gnu.org/software/libc/manual/html_node/ISO-Random.html)
+states that "If you call `rand` before a seed has been established with `srand`,
+it uses the value `1` as a default seed." Because of that the same door will
+always have the same starting address in every execution. The only difference
+between different runs is because the writable doors are chosen using
+`/dev/urandom`.
+
+To take advantage of that we can use the `libc` to previous calculate the
+starting address of all `160` doors (10 corridors `*` 16 doors per each). The
+following snippet build a list with all starting addresses:
+
+{% highlight python %}
+import ctypes
+libc = ctypes.cdll.LoadLibrary('libc.so.6')
+
+doors = []
+for i in range(10 * 16):
+    address = (libc.rand() << 12) + 0x10000
+    doors.append(hex(address))
+{% endhighlight %}
+
+Now we
+do not need to follow the rules of the labyrinth, and in one of the most naive
+approaches we could just test every address using `stat` or `write` and print
+the content every time the address is writable.
+
+## 3 - Bonus: Lazy CTF Player
+
 # Final Considerations
 
 # Codes
 
 ## IDA Disassembly
 
-{% highlight c %}
-int64 __fastcall main(int a1, char **a2, char **a3)
-{
-  FILE *urandom_fd;
-  unsigned __int64 corridor;
-  _QWORD *labyrinth_p;
-  size_t v6;
-  unsigned __int8 random_value_0_15;
-  __int64 i;
-  _BOOL4 v9;
-  int rand_var;
-  void *door;
-  FILE *flag_fd, *flag_fd_p;
-  void (__fastcall *shellcode)(_QWORD);
-  void (__fastcall *shellcode_p)(_QWORD);
-  signed __int64 clear_registers_size;
-  unsigned __int64 j, v18;
-  unsigned int return_code;
-  _QWORD *labyrinth;
-  __int16 v22;
-  __int64 *v23, ptr[21];
-  __int16 v25, v26;
-  int v27;
-  __int64 v28;
-
-  if ( setvbuf(stdout, 0LL, 2, 0LL) )
-  {
-    fwrite("Error: failed to disable output buffering. Exiting\n", 1uLL, 0x33uLL, stderr);
-    return_code = -1;
-  }
-  else
-  {
-    return_code = setvbuf(stdin, 0LL, 2, 0LL);
-    if ( return_code )
-    {
-      fwrite("Error: failed to disable input buffering. Exiting\n", 1uLL, 0x32uLL, stderr);
-      return_code = -1;
-    }
-    else
-    {
-      urandom_fd = fopen("/dev/urandom", "r");
-      if ( urandom_fd )
-      {
-        corridor = 10LL;
-        labyrinth = mmap(0LL, 0x1000uLL, 3, 34, -1, 0LL);
-        labyrinth_p = labyrinth;
-        while ( 1 )
-        {
-          v6 = fread(ptr, 1uLL, 1uLL, urandom_fd);
-          random_value_0_15 = ptr[0] & 0xF;     // restrict random
-          LOBYTE(ptr[0]) &= 0xFu;
-          if ( v6 != 1 )
-            break;
-          for ( i = 0LL; i != 16; ++i )
-          {
-            v9 = random_value_0_15 == i;
-            rand_var = rand();                  // ! srand not found in the code (?)
-            door = mmap((void *)(((__int64)rand_var << 12) + 0x10000), 0x1000uLL, 3 * v9, 34, -1, 0LL);
-            labyrinth_p[i] = door;
-            if ( !door)
-            {
-              fwrite("Error: failed to allocate memory.\n", 1uLL, 0x22uLL, stderr);
-              goto LABYRINTH_FAIL;
-            }
-            random_value_0_15 = ptr[0];         // useless?
-          }
-          labyrinth_p = (_QWORD *)labyrinth_p[LOBYTE(ptr[0])];
-          if ( !labyrinth_p )
-            goto LABYRINTH_FAIL;
-          if ( !--corridor )
-          {
-            fclose(urandom_fd);
-            flag_fd = fopen("flag.txt", "r");
-            flag_fd_p = flag_fd;
-            if ( flag_fd )
-            {
-              if ( fread(labyrinth_p, 1uLL, 0x1000uLL, flag_fd) )
-              {
-                fclose(flag_fd_p);
-                shellcode = (void (__fastcall *)(_QWORD))mmap(0LL, 0x1000uLL, 7, 34, -1, 0LL);
-                shellcode_p = shellcode;
-                if ( shellcode )
-                {
-                  clear_registers_size = &clear_registers_end - (_UNKNOWN *)clear_registers;
-                  memcpy(shellcode, clear_registers, &clear_registers_end - (_UNKNOWN *)clear_registers);
-                  puts("Welcome to the Segfault Labyrinth");
-                  ptr[6] = 0xE701000015LL;
-                  ptr[0] = 0x400000020LL;
-                  ptr[8] = 0x3C01000015LL;
-                  ptr[1] = 0xC000003E00010015LL;
-                  ptr[12] = 0x901000015LL;
-                  ptr[4] = 0xF01000015LL;
-                  ptr[14] = 0xB01000015LL;
-                  ptr[5] = 0x7FFF000000000006LL;
-                  ptr[7] = 0x7FFF000000000006LL;
-                  ptr[9] = 0x7FFF000000000006LL;
-                  ptr[11] = 0x7FFF000000000006LL;
-                  ptr[13] = 0x7FFF000000000006LL;
-                  ptr[15] = 0x7FFF000000000006LL;
-                  ptr[16] = 0x501000015LL;
-                  ptr[17] = 0x7FFF000000000006LL;
-                  ptr[19] = 0x7FFF000000000006LL;
-                  ptr[18] = 0x401000015LL;
-                  ptr[20] = 0x101000015LL;
-                  ptr[2] = 6LL;
-                  ptr[3] = 32LL;
-                  ptr[10] = 16777237LL;
-                  v25 = 6;
-                  v26 = 0;
-                  v27 = 2147418112;
-                  v28 = 6LL;
-                  v22 = 23;
-                  v23 = ptr;
-                  if ( prctl(38, 1LL, 0LL, 0LL, 0LL) )
-                  {
-                    perror("prctl(NO_NEW_PRIVS)");
-                  }
-                  else if ( prctl(22, 2LL, &v22) )
-                  {
-                    perror("prctl(PR_SET_SECCOMP)");
-                  }
-                  for ( j = 0LL; j <= 7; j += read(0, ptr, 8 - j) )
-                    ;
-                  if ( j == 8 )
-                  {
-                    ptr[0] %= (unsigned __int64)(4096 - clear_registers_size);
-                    v18 = ptr[0];
-                    if ( !ptr[0] )
-                      goto RUN_SHELLCODE_LABEL;
-                    do
-                      corridor += read(0, (char *)shellcode_p + clear_registers_size, v18 - corridor);
-                    while ( v18 > corridor );
-                    if ( ptr[0] != corridor )
-                    {
-                      fwrite("Error: failed to read code. Exiting.\n", 1uLL, 0x25uLL, stderr);
-                      return_code = -1;
-                    }
-                    else
-                    {
-RUN_SHELLCODE_LABEL:
-                      shellcode_p(labyrinth);
-                    }
-                  }
-                  else
-                  {
-                    fwrite("Error: failed to read code size. Exiting.\n", 1uLL, 0x2AuLL, stderr);
-                    return_code = -1;
-                  }
-                }
-                else
-                {
-                  fwrite("Error: failed to allocate shellcode memory. Exiting.\n", 1uLL, 0x35uLL, stderr);
-                  return_code = -1;
-                }
-              }
-              else
-              {
-                fwrite("Error: failed to read flag. Exiting.\n", 1uLL, 0x25uLL, stderr);
-                return_code = -1;
-              }
-            }
-            else
-            {
-              fwrite("Error: failed to open flag. Exiting.\n", 1uLL, 0x25uLL, stderr);
-              return_code = -1;
-            }
-            return return_code;
-          }
-        }
-        fwrite("Error: failed to read random. Exiting.\n", 1uLL, 0x27uLL, stderr);
-LABYRINTH_FAIL:
-        fwrite("Error: failed to build labyrinth. Exiting\n", 1uLL, 0x2AuLL, stderr);
-        return_code = -1;
-      }
-      else
-      {
-        fwrite("Error: failed to open urandom. Exiting\n", 1uLL, 0x27uLL, stderr);
-        return_code = -1;
-      }
-    }
-  }
-  return return_code;
-}
-{% endhighlight %}
-
-...
+{% gist cd019e6cc4788e062c2fd1e411b3f212 challenge-disasm.c %}
 
 # References
 
@@ -582,3 +430,4 @@ LABYRINTH_FAIL:
 - seccomp-tools - [https://github.com/david942j/seccomp-tools](https://github.com/david942j/seccomp-tools)
 - stat(2) — Linux manual page - [https://man7.org/linux/man-pages/man2/lstat.2.html](https://man7.org/linux/man-pages/man2/lstat.2.html)
 - write(2) — Linux manual page - [https://man7.org/linux/man-pages/man2/write.2.html](https://man7.org/linux/man-pages/man2/write.2.html)
+- ISO C Random Number Functions - [https://www.gnu.org/software/libc/manual/html_node/ISO-Random.html](https://www.gnu.org/software/libc/manual/html_node/ISO-Random.html)
