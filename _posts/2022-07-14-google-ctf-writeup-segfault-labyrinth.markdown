@@ -288,8 +288,8 @@ us. There are two promising ones (`stat` and `write`). In short:
 
 - `stat` - Return information about a file, in the buffer pointed to by `statbuf`. 
 
-- `write` - writes up to count bytes from the buffer starting at a position in
-  the file referred to by the file descriptor `fd`.
+- `write` - writes up `N` bytes from the buffer starting at a position in the
+  file referred to by the file descriptor `fd`.
 
 In both cases, when the address is not accessible, it returns an `EFAULT`.
 `EFAULT` is when you try to access or write in a bad address or an outside of
