@@ -300,7 +300,7 @@ Flag`.
 #### Check Doors
 Given a corridor, check each door (address) trying to find which one is writable. 
 Since every corridor has only one door that give access to the next corridor, I
-used a infinite loop the breaks when the correct one is found.
+used an infinite loop that breaks when the correct one is found.
 
 {% highlight nasm %}
 ; Use r15 as the reference to explore
