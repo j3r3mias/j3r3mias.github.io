@@ -10,6 +10,8 @@ url: ""
 twitter_username: j3r3m14s
 github_username:  j3r3mias
 
+markdown: kramdown
+
 lsi: false
 safe: true
 incremental: false
@@ -38,4 +40,3 @@ plugins:
   - jekyll-sitemap
   - jekyll-toc
 
-# markdown: kramdown
