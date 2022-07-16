@@ -457,7 +457,7 @@ can be checked at the end of this article.
 
 ### 03 - Bonus: Lazy CTF Player
 
-[This is](03---exploit-03---lazy-ctf-player-bonus) one of that solutions you
+[This is](#03---exploit-03---lazy-ctf-player-bonus) one of that solutions you
 are proudly ashamed of yourself during CTFs, but it works. Using some
 consolidation of the previous two solutions, this one just guess on of the last
 16 doors and repeatedly connects to the server trying to read always the same
