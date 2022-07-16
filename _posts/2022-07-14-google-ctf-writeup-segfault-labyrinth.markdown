@@ -130,8 +130,8 @@ and if this result is 1, then the protection will be the value 3 that is
 `PROT_READ` and `PROT_WRITE`, and if the value is 0, the protection is
 `PROT_NONE` (pages cannot be accessed) (again, check the
 [original](https://github.com/google/google-ctf/blob/master/2022/misc-segfault-labyrinth/challenge/challenge.c#L97)
-to see how different a decompiler can be probably (but not only) because of flag
-optimizations). 
+to see how different a decompiled code can be probably (but not only) because of
+flag optimizations). 
 
 Outside the loop, the only writable door will now be the entry-point to the next
 corridor. Also, after that, it checks if `corridor` is zero. While not, the
