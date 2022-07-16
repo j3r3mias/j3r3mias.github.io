@@ -267,8 +267,8 @@ syscalls.
 
 Once we get the core idea of the binary, there are two approachable strategies
 to the challenge, that I believe follows what the creator intended to do: (01)
-Explore the Labyrinth and (02) Rage Against the Random. As a bonus, it will be
-a third one that I called the (03) Lazy CTF Player.
+Explore the Labyrinth and (02) Rage Against the Random. As a bonus, there will
+be a third one that I called the (03) Lazy CTF Player.
 
 ### 01 - Explore the Labyrinth
 
