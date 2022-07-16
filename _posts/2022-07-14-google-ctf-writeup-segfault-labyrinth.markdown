@@ -6,14 +6,16 @@ tags: ctf google-ctf reversing reverse-engineering writeup
 toc: true
 ---
 
-In this writeup I will describe the journey to finish this reverse engineering
-challenge trying to show my complete approach in a striped binary.  
-
 # Table of Contents
 {:.no_toc}
 
 * toc
 {:toc}
+
+# Introduction
+
+In this writeup I will describe the journey to finish this reverse engineering
+challenge trying to show my complete approach in a striped binary.  
 
 # Summary Information
 
@@ -122,7 +124,8 @@ of this page uses `v9` times 3 where if the value is 1, then the protection will
 be the value 3 that is `PROT_READ` and `PROT_WRITE`, and if the value is 0, the
 protection is `PROT_NONE` (pages cannot be accessed) (again, check the
 [original](https://github.com/google/google-ctf/blob/master/2022/misc-segfault-labyrinth/challenge/challenge.c#L97)
-to see how different a decompiler can be). 
+to see how different a decompiler can be probably (but not only) because of flag
+optimizations). 
 
 Outside the loop, the only writable door will now be the entry-point to the next
 corridor. Also, after that, it checks if `corridor` is zero. While not, the
@@ -392,9 +395,10 @@ always have the same starting address in every execution. The only difference
 between different runs is because the writable doors are chosen using
 `/dev/urandom`.
 
-To take advantage of that we can use the `libc` to previous calculate the
-starting address of all `160` doors (10 corridors `*` 16 doors per each). The
-following snippet build a list with all starting addresses:
+To take advantage of that we can use the
+[`libc`](https://man7.org/linux/man-pages/man7/libc.7.html) to previous
+calculate the starting address of all `160` doors (10 corridors `*` 16 doors per
+each). The following snippet build a list with all starting addresses:
 
 {% highlight python %}
 import ctypes
@@ -406,10 +410,48 @@ for i in range(10 * 16):
     doors.append(hex(address))
 {% endhighlight %}
 
-Now we
-do not need to follow the rules of the labyrinth, and in one of the most naive
-approaches we could just test every address using `stat` or `write` and print
-the content every time the address is writable.
+Now we do not need to follow the rules of the labyrinth, and in one of the most
+naive approaches we could just test every address using `stat` or `write` and
+print the content every time the address is writable. This would requires a huge
+payload but we can improve this strategy testing only the doors of the last
+corridor where only one door has writable permissions. Then using the generated
+list of doors, the construction of the payload (using python) is the following:
+
+{% highlight python %}
+for addr in doors[-16:]: 		# Last 16 doors
+    door_code = f'''
+mov rdi, {addr}
+lea rsi, [rip + 950]
+mov rax, 4
+syscall
+// compare return with EFAULT (-14)
+cmp rax, -14
+jne print_flag
+'''
+    payload += door_code
+
+payload += '''
+print_flag:
+// write content
+mov rsi, rdi
+mov rdi, 1
+mov rdx, 0x100
+mov rax, 1
+syscall
+// exit
+mov rax, 0x3c
+xor rdi, rdi
+syscall
+nop
+nop
+nop
+nop
+'''
+{% endhighlight %}
+
+The loop in the code just creates a block of code that test each one of the last 
+16 doors appending to the payload. When the right one is found, the program jumps 
+to the label `print_flag`, write the flag and exit successfully.
 
 ## 3 - Bonus: Lazy CTF Player
 
@@ -440,7 +482,7 @@ the content every time the address is writable.
 
 1. [pwntools (`checksec`)](https://github.com/Gallopsled/pwntools)
 
-1. [IDA](https://hex-rays.com/ida-free/)
+1. [IDA Decompiler/Disassembler](https://hex-rays.com/ida-free/)
 
 1. [Secure Computing Mode (Seccomp)](https://en.wikipedia.org/wiki/Seccomp)
 
@@ -452,3 +494,4 @@ the content every time the address is writable.
 
 1. [ISO C Random Number Functions](https://www.gnu.org/software/libc/manual/html_node/ISO-Random.html)
 
+1. [libc(7) — Linux manual page](https://man7.org/linux/man-pages/man7/libc.7.html)
