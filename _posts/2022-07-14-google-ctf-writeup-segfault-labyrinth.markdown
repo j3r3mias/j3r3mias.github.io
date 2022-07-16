@@ -260,11 +260,11 @@ syscalls.
 ## Strategies and Solutions
 
 Once we get the core idea of the binary, there are two approachable strategies
-to the challenge, that I believe follows what the creator intended to do:
-(1) Explore the Labyrinth and (2) Rage Against the Random. As a bonus, it will
-be a third one that I called the (3) Lazy CTF Player.
+to the challenge, that I believe follows what the creator intended to do: (01)
+Explore the Labyrinth and (02) Rage Against the Random. As a bonus, it will be
+a third one that I called the (03) Lazy CTF Player.
 
-### 1 - Explore the Labyrinth
+### 01 - Explore the Labyrinth
 
 For me, this is the clear one. When you run the program, the payload will be
 combined with `clear_registers` that let us only with an address in the register
@@ -384,7 +384,7 @@ article) this is the output:
 
 {% include gctf-2022-misc-segfault-exploit-01-explore.html %}
 
-### 2 - Rage Against the Random
+### 02 - Rage Against the Random
 
 Like I previous mentioned in the overview, `rand_var` uses the function `rand()` 
 that is not seeded in the code. [The
@@ -455,16 +455,17 @@ program jumps to the label `print_flag`, write the flag to `stdout` and exit
 successfully. The [full solution](exploit-02)
 can be checked at the end of this article.
 
-### 3 - Bonus: Lazy CTF Player
+### 03 - Bonus: Lazy CTF Player
 
-This is one of that solutions you are proudly ashamed of yourself during CTFs,
-but it works. Using some consolidation of the previous two solutions, this one 
-just guess on of the last 16 doors and repeatedly connects to the server trying 
-to read always the same address again and again until that one address is picked 
-as the one with flag. Since we only need to pick an address between 16 doors,
-`6%` of chances to hit the jackpot is very doable even if the contest use some 
-kind of [PoW](https://en.wikipedia.org/wiki/Proof_of_work) (Prof of Work). Now
-the payload is reduced (22 bytes) to:
+[This is](#codes) one of that solutions you are proudly ashamed of yourself
+during CTFs, but it works. Using some consolidation of the previous two
+solutions, this one just guess on of the last 16 doors and repeatedly connects
+to the server trying to read always the same address again and again until that
+one address is picked as the one with flag. Since we only need to pick an
+address between 16 doors, `6%` of chances to hit the jackpot is very doable
+even if the contest use some kind of
+[PoW](https://en.wikipedia.org/wiki/Proof_of_work) (Prof of Work). Now the
+payload is reduced (22 bytes) to:
 
 {% highlight nasm %}
 mov rsi, GUESS_ADDRESS
@@ -485,7 +486,7 @@ Not the most beautiful one but flag is flag! `¯\_(ツ)_/¯`
 
 {% gist 18750235e4273e6b591faa56af468d4c writeup-solver-01.py %}
 
-### 02 - Exploit 02 - Rage Against the Random [exploit-02]
+### 02 - Exploit 02 - Rage Against the Random
 
 {% gist 98f423599b63aa355583104c9a30cad4 writeup-solver-02.py %}
 
