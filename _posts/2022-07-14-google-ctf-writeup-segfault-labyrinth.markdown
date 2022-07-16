@@ -221,7 +221,7 @@ collect the rules seccomp is applying to the program. This is the output:
 
 The process has its `syscalls` restricted to `rt_sigreturn`, `exit_group`,
 `exit`, `read`, `mmap`, `munmap`, `fstat`, `stat` and `write`. The next part of
-the program read a value to `ptr[0]` that is the length of our payload.
+the program read a value to `ptr` that is the length of our payload.
 
 {% highlight c %}
     for ( j = 0LL; j <= 7; j += read(0, ptr, 8 - j) )
