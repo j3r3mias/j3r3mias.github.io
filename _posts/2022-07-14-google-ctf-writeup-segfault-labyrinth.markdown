@@ -299,16 +299,16 @@ Flag`.
 
 #### Check Doors
 Given a corridor, check each door (address) trying to find which one is writable. 
-Since every corridor has one door that give access to the next corridor, I used
-a infinite loop the breaks when the correct one is found.
+Since every corridor has only one door that give access to the next corridor, I
+used a infinite loop the breaks when the correct one is found.
 
 {% highlight nasm %}
 ; Use r15 as the reference to explore
 mov r15, rdi
 ; while (1)
 doors_loop:
-    ; Use a position after our payload
     mov rdi, [r15]
+    ; Use a position after our payload
     lea rsi, [rip + 0x300]
     mov rax, 4
     syscall
