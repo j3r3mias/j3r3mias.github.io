@@ -496,7 +496,7 @@ Check the output:
 
 ### 03 - Exploit 03 - Lazy CTF Player (Bonus)
 
-...
+{% gist 6808ed67b5a0e1d6b91007c394c2e085 writeup-solver-03.py %}
 
 ### 04 - IDA Disassembly of the Binary
 
