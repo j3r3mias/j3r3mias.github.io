@@ -125,8 +125,8 @@ it checks if the value of `i` is the same as the picked value in
 observation here is that `rand` wasn't seeded ([remember this for
 later](#02---rage-against-the-random)). Thereafter a page is created (called
 here `door`) where the starting address is calculated using `rand_var` with the
-bits "left-shifted" 12 positions. Also the protections of this page uses `v9`
-times 3 where if the value is 1, then the protection will be the value 3 that is
+bits "left-shifted" 12 positions. Also the protections of this page uses `v9 * 3`
+and if this result is 1, then the protection will be the value 3 that is
 `PROT_READ` and `PROT_WRITE`, and if the value is 0, the protection is
 `PROT_NONE` (pages cannot be accessed) (again, check the
 [original](https://github.com/google/google-ctf/blob/master/2022/misc-segfault-labyrinth/challenge/challenge.c#L97)
