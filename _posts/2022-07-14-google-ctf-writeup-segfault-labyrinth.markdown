@@ -320,10 +320,10 @@ doors_loop:
 doors_end_loop:
 {% endhighlight %}
 
-This uses register `R15` as a reference to explore, copy the address to be
-checked to `RDI` and call `stat` (value 4 in `RAX`). After that, check if the
-returned value is equal to `EFAULT` (-14) and ends the loop when the writable
-address is found. 
+The code uses `R15` as a reference to explore, copy the address to be checked to
+`RDI` and call `stat` (value 4 in `RAX`). After that, check if the returned
+value is equal to `EFAULT` (-14) and ends the loop when the writable address is
+found. 
 
 #### Explore Every Corridor
 
