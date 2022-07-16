@@ -452,7 +452,7 @@ nop
 The loop in the code just creates a block of code that test each one of the
 last 16 doors appending it to `payload`. When the right one is found, the
 program jumps to the label `print_flag`, write the flag to `stdout` and exit
-successfully. The [full solution](## 02 - Exploit 02 - Rage Against the Random)
+successfully. The [full solution](exploit-02)
 can be checked at the end of this article.
 
 ## 3 - Bonus: Lazy CTF Player
@@ -465,7 +465,7 @@ can be checked at the end of this article.
 
 {% gist 18750235e4273e6b591faa56af468d4c writeup-solver-01.py %}
 
-## 02 - Exploit 02 - Rage Against the Random
+## 02 - Exploit 02 - Rage Against the Random [exploit-02]
 
 {% gist 98f423599b63aa355583104c9a30cad4 writeup-solver-02.py %}
 
