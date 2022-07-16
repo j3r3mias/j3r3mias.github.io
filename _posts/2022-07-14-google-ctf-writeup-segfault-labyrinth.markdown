@@ -276,7 +276,7 @@ For me, this is the clear one. When you run the program, the payload will be
 combined with `clear_registers` that let us with only a single address in the
 register `RDI`. This address is the entry point of the labyrinth. To check this
 statement, the image below shows an execution where the payload have multiple
-`INT3 (\xcc)` that throws a
+`INT3 (\xcc)` instruction which throws a
 [SIGTRAP](https://en.wikipedia.org/wiki/Signal_(IPC)#SIGTRAP) in the debugger.
 
 ![Execution in pwndbg sending multiples `0xcc` as a payload.]({{ site.url  }}/assets/images/gctf-2022-misc-segfault-labyrinth-pwndbg-payload-breakpoint.png)
