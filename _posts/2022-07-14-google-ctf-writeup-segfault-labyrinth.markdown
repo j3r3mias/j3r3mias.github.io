@@ -14,8 +14,10 @@ toc: true
 
 ## Introduction
 
-In this writeup I will describe the journey to finish this reverse engineering
-challenge trying to show my complete approach in a striped binary.  
+In this writeup I will describe the journey to finish one of the challenges from 
+Google CTF 2022 called Segfault Labyrinth in the ~~reversing engineering~~
+miscellaneous category. The idea of this writeup is to cover mainly how to
+approach and understand a striped binary.
 
 ## Summary Information
 
@@ -23,7 +25,7 @@ challenge trying to show my complete approach in a striped binary.
 
 - Author: [Calle “Zeta Two” Svensson](https://twitter.com/ZetaTwo)
 
-- Category: Reversing
+- Category: misc
 
 - Description: Be careful! One wrong turn and the whole thing comes crashing
   down
@@ -36,11 +38,11 @@ challenge trying to show my complete approach in a striped binary.
 
 ### In-Depth Analysis
 
-The challenge provides a binary called `challenge` that is a stripped ELF
-64-bit. A stripped binary is a program without any debugging symbols. It is
+The challenge provides a binary called `challenge` that is a stripped `ELF
+64-bit`. A stripped binary is a program without any debugging symbols. It is
 normally used to reduce the size of the files and make the life of reverse
-engineers ~a living hell~ more difficult (and also responsible for most
-part of my headaches). First things first, checking the security settings using
+engineers ~~a living hell~~ more difficult (and also responsible for most part
+of my headaches). First things first, checking the security settings using
 `checksec`, it returns the following:
 
 {% include gctf-2022-misc-segfault-checksec.html %}
