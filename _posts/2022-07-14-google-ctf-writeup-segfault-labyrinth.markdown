@@ -58,10 +58,11 @@ is the output:
 
 There is a message of welcome and the binary hangs waiting for an input and
 nothing more. Then it's ~~morbin~~ reversing time! I choose to use IDA that has
-a very handful disassembly feature. With the disassembly that has no symbols to
-help, I renamed a lot of variables creating a context that helped to understand
-better the code. I will show some snippets and you can read the full code at the
-end of this article.
+a very handful disassembly feature. Because the binary is stripped and has no
+symbols to provide any help, I renamed a lot of variables in the disassembly
+code creating a context that helped to understand better the code. I will show
+some snippets and you can read the [full
+code](#04---ida-disassembly-of-the-binary) at the end of this article.
 
 The first thing the program does is to open `/dev/urandom`, and create a page
 with `0x1000` bytes that is allowed to read and write content (third parameter). 
