@@ -312,7 +312,7 @@ doors_loop:
     lea rsi, [rip + 0x300]
     mov rax, 4
     syscall
-; compare return with EFAULT (-14)
+    ; compare the return with EFAULT (-14)
     cmp rax, -14
     jne doors_end_loop
     add r15, 8
