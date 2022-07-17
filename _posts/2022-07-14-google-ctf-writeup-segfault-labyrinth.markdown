@@ -356,8 +356,8 @@ the flag.
 #### Read the Flag
 
 In the last part of the code, `RDI` contains the address to our desired flag,
-then we use the `syscall` `WRITE` reading `0x100` bytes to `stdout` and finish
-the payload calling `EXIT` with success. 
+then we use the `syscall` `write` reading `0x100` bytes to `stdout` and finish
+the payload calling `exit` with success. 
 
 {% highlight nasm %}
 end_corridor_exit_labyrinth:
