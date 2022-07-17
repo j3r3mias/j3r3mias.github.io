@@ -493,6 +493,8 @@ Check the output:
 
 ## Final Considerations
 
+
+
 ## Codes
 
 ### 01 - Exploit 01 - Explore the Labyrinth
@@ -515,6 +517,8 @@ Check the output:
 ## References
 
 1. [Google Capture the Flag](https://capturetheflag.withgoogle.com/)
+
+1. [Google Capture the Flag 2022 - Segfault Labyrinth files](https://github.com/google/google-ctf/tree/master/2022/misc-segfault-labyrinth)
 
 1. [pwntools (`checksec`)](https://github.com/Gallopsled/pwntools)
 
