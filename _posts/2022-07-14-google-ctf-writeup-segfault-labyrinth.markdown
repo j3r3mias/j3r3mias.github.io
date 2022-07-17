@@ -476,7 +476,7 @@ doable even if the contest uses some kind of
 not. Now the payload is reduced (22 bytes) to:
 
 {% highlight nasm %}
-mov rsi, GUESS_ADDRESS
+mov rsi, ADDRESS_GUESS
 mov edi, 1
 mov dl, 0x40
 inc eax
@@ -493,7 +493,8 @@ Check the output:
 
 ## Final Considerations
 
-
+This challenges was really a journey to reverse engineering with a lot of
+opportunities to ~~suffer~~ learn how to understand
 
 ## Codes
 
