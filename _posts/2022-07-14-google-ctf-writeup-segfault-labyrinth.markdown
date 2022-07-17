@@ -387,7 +387,7 @@ should works:
 ![Visualization of how the strategy works.]({{ site.url  }}/assets/images/gctf-2022-misc-segfault-labyrinth-example-animation.gif)
 
 And running the solution (check
-[`writeup-solver-01.py`](01---exploit-01---explore-the-labyrinth) at the end of
+[`writeup-solver-01.py`](#01---exploit-01---explore-the-labyrinth) at the end of
 this article) this is the output:
 
 {% include gctf-2022-misc-segfault-exploit-01-explore.html %}
@@ -398,15 +398,15 @@ Like I previous mentioned in the overview, `rand_var` uses the function `rand()`
 that is not seeded in the code. [The
 documentation](https://www.gnu.org/software/libc/manual/html_node/ISO-Random.html)
 states that "If you call `rand` before a seed has been established with `srand`,
-it uses the value `1` as a default seed." Because of that the same door will
+it uses the value `1` as a default seed.". Because of that the same door will
 always have the same starting address in every execution. The only difference
 between different runs is because the writable doors are chosen using
 `/dev/urandom`.
 
 To take advantage of that we can use the
-[`libc`](https://man7.org/linux/man-pages/man7/libc.7.html) to previous
-calculate the starting address of all 160 doors (10 corridors * 16 doors per
-each). The following snippet build a list with all starting addresses:
+[`libc`](https://man7.org/linux/man-pages/man7/libc.7.html) to calculate the
+starting address of all 160 doors (10 corridors * 16 doors per each). The
+following snippet build a list with all starting addresses:
 
 {% highlight python %}
 import ctypes
