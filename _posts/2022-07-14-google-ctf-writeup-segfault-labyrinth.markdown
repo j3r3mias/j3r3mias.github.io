@@ -122,7 +122,7 @@ After that, it starts a loop of 16 iterations (using `i` as the counter) where
 it checks if the value of `i` is the same as the picked value in
 `random_value_0_15` and save the result in `v9` (consider this a boolean (`0` or
 `1`)). Then it picks a value from `rand` and save it in `rand_var`. The BIG
-observation here is that `rand` wasn't seeded ([remember this for
+observation here is that `rand` was not seeded ([remember this for
 later](#02---rage-against-the-random)). Thereafter a page is created (called
 here `door`) where the starting address is calculated using `rand_var` with the
 bits "left-shifted" 12 positions. Also the protections of this page uses `v9 * 3`
@@ -209,7 +209,7 @@ else if ( prctl(22, 2LL, &v22) )
 }
 {% endhighlight %}
 
-After the message, there are a lot of constant numbers set in `ptr`. I didn't 
+After the message, there are a lot of constant numbers set in `ptr`. I did not 
 dug further what is each number. What I did was use one of the tools the CTF
 provided to help us that is [Google](https://www.google.com). Throwing some
 number there, it returned values used in
@@ -497,7 +497,7 @@ Check the output:
 This challenges was really a journey to reverse engineering with a lot of
 opportunities to ~~suffer~~ learn, review concepts and practice more
 understanding of other peoples code. Every year Google CTF delivers a variety of
-good challenges and this year wasn't different.
+good challenges and this year was not different.
 
 P.S.: After I finished to write this article, I saw that
 [LiveOverflow](https://twitter.com/LiveOverflow) and
