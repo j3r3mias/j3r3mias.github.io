@@ -376,8 +376,8 @@ nop
 {% endhighlight %}
 
 In the end of the code, there are some `NOP`s (no operation) just because if the
-page where payload got copied has some garbage, the last instruction could be
-messed somehow.
+page where payload got copied has some garbage, then the last instruction could
+be messed somehow.
 
 #### Execution
 
