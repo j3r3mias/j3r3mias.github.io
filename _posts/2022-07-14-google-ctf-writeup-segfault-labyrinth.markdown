@@ -386,8 +386,9 @@ should works:
 
 ![Visualization of how the strategy works.]({{ site.url  }}/assets/images/gctf-2022-misc-segfault-labyrinth-example-animation.gif)
 
-And running the solution (check `writeup-solver-01.py` at the end of this
-article) this is the output:
+And running the solution (check
+[`writeup-solver-01.py`](01---exploit-01---explore-the-labyrinth) at the end of
+this article) this is the output:
 
 {% include gctf-2022-misc-segfault-exploit-01-explore.html %}
 
