@@ -498,10 +498,10 @@ opportunities to ~~suffer~~ learn, review concepts and practice more
 understanding of other peoples code. Every year Google CTF delivers a variety of
 good challenges and this year wasn't different.
 
-P.S.: After I finished to write this article
+P.S.: After I finished to write this article, I saw that
 [LiveOverflow](https://twitter.com/LiveOverflow) and
-[PwnFuncTtion](https://twitter.com/PwnFunction) published two excellent videos
-about random and seeds. The [first
+[PwnFuncTtion](https://twitter.com/PwnFunction) recently published two excellent
+videos about random and seeds. The [first
 one](https://www.youtube.com/watch?v=gSxcDYCK_lY) approaching the creation of
 worlds in Minecraft and the [last
 one](https://www.youtube.com/watch?v=-h_rj2-HP2E) about how random works in V8
