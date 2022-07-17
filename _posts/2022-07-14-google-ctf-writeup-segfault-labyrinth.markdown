@@ -504,11 +504,11 @@ P.S.: After I finished to write this article, I saw that
 videos about random and seeds. The [first
 one](https://www.youtube.com/watch?v=gSxcDYCK_lY) approaching the creation of
 worlds in Minecraft and the [last
-one](https://www.youtube.com/watch?v=-h_rj2-HP2E) about how random works in V8
-(Google’s open source high-performance JavaScript and WebAssembly engine).  Both
-videos are a good examples of how doing challenges like Segfault Labyrinth is a
-good practice to understand how a lot of projects work and what to do when you
-face its usage like we did it.
+one](https://www.youtube.com/watch?v=-h_rj2-HP2E) about how random works in
+[V8](https://v8.dev) (Google’s open source high-performance JavaScript and
+WebAssembly engine).  Both videos are a good examples of how doing challenges
+like Segfault Labyrinth is a good practice to understand how a lot of projects
+work and what to do when you face its usage like we did it.
 
 ## Codes
 
