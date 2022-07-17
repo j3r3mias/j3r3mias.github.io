@@ -494,7 +494,21 @@ Check the output:
 ## Final Considerations
 
 This challenges was really a journey to reverse engineering with a lot of
-opportunities to ~~suffer~~ learn how to understand
+opportunities to ~~suffer~~ learn, review concepts and practice more
+understanding of other peoples code. Every year Google CTF delivers a variety of
+good challenges and this year wasn't different.
+
+P.S.: After I finished to write this article
+[LiveOverflow](https://twitter.com/LiveOverflow) and
+[PwnFuncTtion](https://twitter.com/PwnFunction) published two excellent videos
+about random and seeds. The [first
+one](https://www.youtube.com/watch?v=gSxcDYCK_lY) approaching the creation of
+worlds in Minecraft and the [last
+one](https://www.youtube.com/watch?v=-h_rj2-HP2E) about how random works in V8
+(Google’s open source high-performance JavaScript and WebAssembly engine).  Both
+videos are a good example of how doing challenges like Segfault Labyrinth is a
+good practice to understand how a lot of projects work and what to do when you
+face its usage like we did it.
 
 ## Codes
 
@@ -538,3 +552,5 @@ opportunities to ~~suffer~~ learn how to understand
 1. [libc(7) — Linux manual page](https://man7.org/linux/man-pages/man7/libc.7.html)
 
 1. [Proof of Work](https://en.wikipedia.org/wiki/Proof_of_work)
+
+1. [V8](https://v8.dev/)
