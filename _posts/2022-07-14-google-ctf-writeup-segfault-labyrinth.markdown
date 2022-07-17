@@ -64,8 +64,9 @@ code creating a context that helped me to understand better what is what. I will
 show some snippets and you can read the [full
 code](#04---ida-disassembly-of-the-binary) at the end of this article.
 
-The first thing the program does is to open `/dev/urandom`, and create a page
-with `0x1000` bytes that is allowed to read and write content (third parameter). 
+The first thing the program does is to open `/dev/urandom`, and then it creates
+a page with `0x1000` bytes that is allowed to read and write content (third
+parameter). 
 
 {% highlight c %}
 urandom_fd = fopen("/dev/urandom", "r");
@@ -267,8 +268,9 @@ syscalls.
 
 Once we get the core idea of the binary, there are two approachable strategies
 to the challenge, that I believe follows what the creator intended to do: (01)
-Explore the Labyrinth and (02) Rage Against the Random. As a bonus, there will
-be a third one that I called the (03) Lazy CTF Player.
+[Explore the Labyrinth](#01---explore-the-labyrinth) and (02) [Rage Against the
+Random](#02---rage-against-the-random). As a bonus, there will be a third one
+that I called the (03) [Lazy CTF Player](#03---bonus-lazy-ctf-player).
 
 ### 01 - Explore the Labyrinth
 
