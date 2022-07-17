@@ -460,7 +460,7 @@ nop
 The loop in the code just creates a block of code that test each one of the
 last 16 doors appending it to `payload`. When the right one is found, the
 program jumps to the label `print_flag`, write the flag to `stdout` and exit
-successfully. The [full solution](exploit-02)
+successfully. The [full solution](#02---exploit-02---rage-against-the-random)
 can be checked at the end of this article.
 
 ### 03 - Bonus: Lazy CTF Player
