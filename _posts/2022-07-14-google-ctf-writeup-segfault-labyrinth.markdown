@@ -471,7 +471,7 @@ one just guess one of the last 16 doors and repeatedly connects to the server
 trying always to read the same picked address again and again until that one is
 picked from the server as the one to have the flag. Since we only need to pick
 an address between 16 doors, `6.25%` of chances to hit the jackpot is very
-doable even if the contest use some kind of
+doable even if the contest uses some kind of
 [PoW](https://en.wikipedia.org/wiki/Proof_of_work) (Prof of Work), which it did
 not. Now the payload is reduced (22 bytes) to:
 
