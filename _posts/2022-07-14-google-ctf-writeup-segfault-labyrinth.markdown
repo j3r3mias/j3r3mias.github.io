@@ -348,9 +348,10 @@ corridors_loop:
 end_corridor_exit_labyrinth:
 {% endhighlight %}
 
-After `Check Doors`, we know that the address in `R15` has as writable address,
-then we can de-reference `R15` that now will points to the next corridor, until
-the last one that points to the flag.
+After `Check Doors`, we know that the address in `R15` has the writable
+address of that corridor, then we can de-reference `R15` that will point to
+the next corridor, and continue this procedure until the last one that points to
+the flag.
 
 #### Read the Flag
 
