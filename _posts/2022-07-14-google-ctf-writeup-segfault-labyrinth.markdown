@@ -396,7 +396,7 @@ this article) this is the output:
 
 Like I previous mentioned in the overview, `rand_var` uses the function
 `rand()`, an implementation of a Pseudorandom Number Generator (PRNG), that is
-not seeded in the code. [The
+not properly seeded in the code. [The
 documentation](https://www.gnu.org/software/libc/manual/html_node/ISO-Random.html)
 states that "If you call `rand` before a seed has been established with `srand`,
 it uses the value `1` as a default seed.". Because of that the same door will
