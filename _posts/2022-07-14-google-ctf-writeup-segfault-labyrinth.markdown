@@ -394,8 +394,9 @@ this article) this is the output:
 
 ### 02 - Rage Against the Random
 
-Like I previous mentioned in the overview, `rand_var` uses the function `rand()` 
-that is not seeded in the code. [The
+Like I previous mentioned in the overview, `rand_var` uses the function
+`rand()`, an implementation of a Pseudorandom Number Generator (PRNG), that is
+not seeded in the code. [The
 documentation](https://www.gnu.org/software/libc/manual/html_node/ISO-Random.html)
 states that "If you call `rand` before a seed has been established with `srand`,
 it uses the value `1` as a default seed.". Because of that the same door will
@@ -506,7 +507,7 @@ one](https://www.youtube.com/watch?v=gSxcDYCK_lY) approaching the creation of
 worlds in Minecraft and the [last
 one](https://www.youtube.com/watch?v=-h_rj2-HP2E) about how random works in
 [V8](https://v8.dev) (Google’s open source high-performance JavaScript and
-WebAssembly engine).  Both videos are a good examples of how doing challenges
+WebAssembly engine).  Both videos are a good examples of how solving challenges
 like Segfault Labyrinth is a good practice to understand how a lot of projects
 work and what to do when you face its usage like we did it.
 
