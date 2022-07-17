@@ -465,13 +465,13 @@ can be checked at the end of this article.
 
 ### 03 - Bonus: Lazy CTF Player
 
-This is one of that solutions you are proudly ashamed of yourself during CTFs,
-but it works. Using some consolidation of the previous two solutions, this one
-just guess one of the last 16 doors and repeatedly connects to the server trying
-always to read the same picked address again and again until that one is picked
-from the server as the one to have the flag. Since we only need to pick an
-address between 16 doors, `6%` of chances to hit the jackpot is very doable even
-if the contest use some kind of
+This is one of that solutions you are ashamed to be proud of yourself during
+CTFs, but it works. Using some consolidation of the previous two solutions, this
+one just guess one of the last 16 doors and repeatedly connects to the server
+trying always to read the same picked address again and again until that one is
+picked from the server as the one to have the flag. Since we only need to pick
+an address between 16 doors, `6%` of chances to hit the jackpot is very doable
+even if the contest use some kind of
 [PoW](https://en.wikipedia.org/wiki/Proof_of_work) (Prof of Work). Now the
 payload is reduced (22 bytes) to:
 
