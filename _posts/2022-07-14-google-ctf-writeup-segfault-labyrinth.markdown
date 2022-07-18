@@ -14,9 +14,9 @@ toc: true
 
 ## Introduction
 
-In this writeup I will describe the journey to finish one of the challenges from 
+In this write-up I will describe the journey to finish one of the challenges from 
 Google CTF 2022 called Segfault Labyrinth in the ~~reversing engineering~~
-miscellaneous category. The idea of this writeup is to cover mainly how to
+miscellaneous category. The idea of this write-up is to cover mainly how to
 approach and understand a striped binary.
 
 ## Summary Information
