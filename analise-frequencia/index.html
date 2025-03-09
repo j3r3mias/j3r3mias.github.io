@@ -1,0 +1,351 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Análise de Frequência</title>
+    <style>
+        BODY {
+            font-family: arial;
+            background: linear-gradient(145deg, rgba(22, 22, 22, 0.02) 0%, rgba(22, 22, 22, 0.02) 58%, rgba(249, 249, 249, 0.02) 58%, rgba(249, 249, 249, 0.02) 90%, rgba(197, 197, 197, 0.02) 90%, rgba(197, 197, 197, 0.02) 93%, rgba(243, 243, 243, 0.02) 93%, rgba(243, 243, 243, 0.02) 99%, rgba(107, 107, 107, 0.02) 99%, rgba(107, 107, 107, 0.02) 100%), linear-gradient(311deg, rgba(157, 157, 157, 0.02) 0%, rgba(157, 157, 157, 0.02) 2%, rgba(234, 234, 234, 0.02) 2%, rgba(234, 234, 234, 0.02) 47%, rgba(57, 57, 57, 0.02) 47%, rgba(57, 57, 57, 0.02) 84%, rgba(181, 181, 181, 0.02) 84%, rgba(181, 181, 181, 0.02) 98%, rgba(128, 128, 128, 0.02) 98%, rgba(128, 128, 128, 0.02) 100%), linear-gradient(97deg, rgba(231, 231, 231, 0.02) 0%, rgba(231, 231, 231, 0.02) 35%, rgba(53, 53, 53, 0.02) 35%, rgba(53, 53, 53, 0.02) 46%, rgba(114, 114, 114, 0.02) 46%, rgba(114, 114, 114, 0.02) 71%, rgba(55, 55, 55, 0.02) 71%, rgba(55, 55, 55, 0.02) 99%, rgba(202, 202, 202, 0.02) 99%, rgba(202, 202, 202, 0.02) 100%), linear-gradient(90deg, rgb(250, 250, 250), rgb(243, 243, 243));
+        }
+
+        textarea {
+            font-family: courier new;
+            font-size: 12pt;
+        }
+
+        H1 {
+            text-align: center;
+            border-bottom: 2px solid rgb(0, 20, 200);
+            font-family: arial;
+            font-size: 14pt;
+        }
+
+        A {
+            color: rgb(40, 0, 200);
+        }
+
+        .columnChart TD {
+            height: 120px;
+            width: 24px;
+            border: 1px solid #DDDDDD;
+            text-align: center;
+            font-size: 8pt;
+            vertical-align: bottom;
+        }
+
+        .column {
+            background-color: #0000ff;
+            width: 24px;
+            border-top-left-radius: 6px;
+            border-top-right-radius: 6px;
+            background: linear-gradient(108deg, rgba(62, 62, 62, 0.09) 0%, rgba(62, 62, 62, 0.09) 30%, rgba(234, 234, 234, 0.09) 30%, rgba(234, 234, 234, 0.09) 100%), linear-gradient(116deg, rgba(101, 101, 101, 0.06) 0%, rgba(101, 101, 101, 0.06) 51%, rgba(231, 231, 231, 0.06) 51%, rgba(231, 231, 231, 0.06) 100%), linear-gradient(258deg, rgba(103, 103, 103, 0.07) 0%, rgba(103, 103, 103, 0.07) 1%, rgba(209, 209, 209, 0.07) 1%, rgba(209, 209, 209, 0.07) 100%), linear-gradient(43deg, rgba(17, 17, 17, 0.09) 0%, rgba(17, 17, 17, 0.09) 7%, rgba(159, 159, 159, 0.09) 7%, rgba(159, 159, 159, 0.09) 100%), linear-gradient(63deg, rgba(211, 211, 211, 0.1) 0%, rgba(211, 211, 211, 0.1) 94%, rgba(233, 233, 233, 0.1) 94%, rgba(233, 233, 233, 0.1) 100%), linear-gradient(207deg, rgba(179, 179, 179, 0.1) 0%, rgba(179, 179, 179, 0.1) 57%, rgba(11, 11, 11, 0.1) 57%, rgba(11, 11, 11, 0.1) 100%), linear-gradient(25deg, rgba(118, 118, 118, 0.07) 0%, rgba(118, 118, 118, 0.07) 98%, rgba(248, 248, 248, 0.07) 98%, rgba(248, 248, 248, 0.07) 100%), linear-gradient(90deg, hsl(246, 90%, 49%), hsl(212, 90%, 49%));
+        }
+
+        .chartLabels TD {
+            text-align: center;
+            border: 1px solid #DDDDDD;
+        }
+
+        .chartPercentages TD {
+            text-align: center;
+            font-size: 8pt;
+            border: 1px solid #DDDDDD;
+        }
+
+
+        .myButton {
+            box-shadow: inset 0px 1px 0px 0px #8496f3;
+            background: linear-gradient(351deg, rgba(68, 68, 68, 0.04) 0%, rgba(68, 68, 68, 0.04) 48%, rgba(20, 20, 20, 0.04) 48%, rgba(20, 20, 20, 0.04) 100%), linear-gradient(155deg, rgba(201, 201, 201, 0.04) 0%, rgba(201, 201, 201, 0.04) 26%, rgba(4, 4, 4, 0.04) 26%, rgba(4, 4, 4, 0.04) 100%), linear-gradient(258deg, rgba(66, 66, 66, 0.04) 0%, rgba(66, 66, 66, 0.04) 76%, rgba(33, 33, 33, 0.04) 76%, rgba(33, 33, 33, 0.04) 100%), linear-gradient(138deg, rgba(207, 207, 207, 0.04) 0%, rgba(207, 207, 207, 0.04) 37%, rgba(196, 196, 196, 0.04) 37%, rgba(196, 196, 196, 0.04) 100%), linear-gradient(80deg, rgba(146, 146, 146, 0.04) 0%, rgba(146, 146, 146, 0.04) 50%, rgba(169, 169, 169, 0.04) 50%, rgba(169, 169, 169, 0.04) 100%), linear-gradient(35deg, rgba(250, 250, 250, 0.04) 0%, rgba(250, 250, 250, 0.04) 38%, rgba(11, 11, 11, 0.04) 38%, rgba(11, 11, 11, 0.04) 100%), linear-gradient(344deg, rgba(224, 224, 224, 0.04) 0%, rgba(224, 224, 224, 0.04) 25%, rgba(220, 220, 220, 0.04) 25%, rgba(220, 220, 220, 0.04) 100%), linear-gradient(190deg, rgba(21, 21, 21, 0.04) 0%, rgba(21, 21, 21, 0.04) 35%, rgba(248, 248, 248, 0.04) 35%, rgba(248, 248, 248, 0.04) 100%), linear-gradient(75deg, rgba(105, 105, 105, 0.04) 0%, rgba(105, 105, 105, 0.04) 35%, rgba(127, 127, 127, 0.04) 35%, rgba(127, 127, 127, 0.04) 100%), linear-gradient(90deg, rgb(1, 69, 179), rgb(25, 87, 233));
+            border-radius: 6px;
+            display: inline-block;
+            cursor: pointer;
+            color: #ffffff;
+            font-family: Arial;
+            padding: 10px 24px;
+            text-decoration: none;
+            margin: 10px;
+        }
+
+        .myButton:hover {
+            text-decoration: underline;
+        }
+
+        .myButton:active {
+            position: relative;
+            top: 1px;
+        }
+
+        .myButton:focus {
+            outline: 0;
+        }
+
+        .substitution TD {
+            text-align: center;
+            border: 1px solid #DDDDDD;
+        }
+
+        .substitution INPUT {
+            width: 22px;
+            text-align: center;
+            font-family: arial;
+            font-size: 12pt;
+            color: rgb(20, 0, 200);
+        }
+    </style>
+
+</head>
+
+<body>
+    <h1>Análise de Frequência</h1>
+    <center>Texto:<br><textarea id="cipher" rows="12" cols="76">ABCD EFGH IJKL MNOP QRST UVWX YZ AEIOU</textarea>
+        <br><button class="myButton" onclick="frequencyAnalysis(document.getElementById('cipher').value);">INICIAR
+            ANÁLISE</button>
+        <br>
+
+        <table align="center" cellspacing="0">
+            <tbody>
+                <tr class="columnChart">
+                    <td id="graph_a">379<div class="column" style="height:110px;"></div>
+                    </td>
+                    <td id="graph_b">359<div class="column" style="height:104.1952506596306px;"></div>
+                    </td>
+                    <td id="graph_c">199<div class="column" style="height:57.757255936675456px;"></div>
+                    </td>
+                    <td id="graph_d">77<div class="column" style="height:22.348284960422163px;"></div>
+                    </td>
+                    <td id="graph_e">94<div class="column" style="height:27.282321899736147px;"></div>
+                    </td>
+                    <td id="graph_f">112<div class="column" style="height:32.5065963060686px;"></div>
+                    </td>
+                    <td id="graph_g">3<div class="column" style="height:0.8707124010554089px;"></div>
+                    </td>
+                    <td id="graph_h">205<div class="column" style="height:59.49868073878628px;"></div>
+                    </td>
+                    <td id="graph_i">15<div class="column" style="height:4.353562005277045px;"></div>
+                    </td>
+                    <td id="graph_j">1<div class="column" style="height:0.29023746701846964px;"></div>
+                    </td>
+                    <td id="graph_k">33<div class="column" style="height:9.577836411609498px;"></div>
+                    </td>
+                    <td id="graph_l">115<div class="column" style="height:33.37730870712401px;"></div>
+                    </td>
+                    <td id="graph_m">1<div class="column" style="height:0.29023746701846964px;"></div>
+                    </td>
+                    <td id="graph_n">148<div class="column" style="height:42.955145118733505px;"></div>
+                    </td>
+                    <td id="graph_o">265<div class="column" style="height:76.91292875989446px;"></div>
+                    </td>
+                    <td id="graph_p">157<div class="column" style="height:45.56728232189973px;"></div>
+                    </td>
+                    <td id="graph_q">161<div class="column" style="height:46.72823218997361px;"></div>
+                    </td>
+                    <td id="graph_r">197<div class="column" style="height:57.17678100263852px;"></div>
+                    </td>
+                    <td id="graph_s">6<div class="column" style="height:1.7414248021108178px;"></div>
+                    </td>
+                    <td id="graph_t">48<div class="column" style="height:13.931398416886543px;"></div>
+                    </td>
+                    <td id="graph_u">9<div class="column" style="height:2.6121372031662267px;"></div>
+                    </td>
+                    <td id="graph_v">45<div class="column" style="height:13.060686015831134px;"></div>
+                    </td>
+                    <td id="graph_w">153<div class="column" style="height:44.406332453825854px;"></div>
+                    </td>
+                    <td id="graph_x">12<div class="column" style="height:3.4828496042216357px;"></div>
+                    </td>
+                    <td id="graph_y">3<div class="column" style="height:0.8707124010554089px;"></div>
+                    </td>
+                    <td id="graph_z">55<div class="column" style="height:15.96306068601583px;"></div>
+                    </td>
+                </tr>
+                <tr class="chartPercentages">
+                    <td id="percent_a">10.8%</td>
+                    <td id="percent_b">10.2%</td>
+                    <td id="percent_c">5.7%</td>
+                    <td id="percent_d">2.2%</td>
+                    <td id="percent_e">2.7%</td>
+                    <td id="percent_f">3.2%</td>
+                    <td id="percent_g">0.1%</td>
+                    <td id="percent_h">5.8%</td>
+                    <td id="percent_i">0.4%</td>
+                    <td id="percent_j">0.0%</td>
+                    <td id="percent_k">0.9%</td>
+                    <td id="percent_l">3.3%</td>
+                    <td id="percent_m">0.0%</td>
+                    <td id="percent_n">4.2%</td>
+                    <td id="percent_o">7.5%</td>
+                    <td id="percent_p">4.5%</td>
+                    <td id="percent_q">4.6%</td>
+                    <td id="percent_r">5.6%</td>
+                    <td id="percent_s">0.2%</td>
+                    <td id="percent_t">1.4%</td>
+                    <td id="percent_u">0.3%</td>
+                    <td id="percent_v">1.3%</td>
+                    <td id="percent_w">4.4%</td>
+                    <td id="percent_x">0.3%</td>
+                    <td id="percent_y">0.1%</td>
+                    <td id="percent_z">1.6%</td>
+                </tr>
+                <tr class="chartLabels">
+                    <td>A</td>
+                    <td>B</td>
+                    <td>C</td>
+                    <td>D</td>
+                    <td>E</td>
+                    <td>F</td>
+                    <td>G</td>
+                    <td>H</td>
+                    <td>I</td>
+                    <td>J</td>
+                    <td>K</td>
+                    <td>L</td>
+                    <td>M</td>
+                    <td>N</td>
+                    <td>O</td>
+                    <td>P</td>
+                    <td>Q</td>
+                    <td>R</td>
+                    <td>S</td>
+                    <td>T</td>
+                    <td>U</td>
+                    <td>V</td>
+                    <td>W</td>
+                    <td>X</td>
+                    <td>Y</td>
+                    <td>Z</td>
+                </tr>
+                <tr class="substitution">
+                    <td><input type="text" id="sub_a" maxlength="1"></td>
+                    <td><input type="text" id="sub_b" maxlength="1"></td>
+                    <td><input type="text" id="sub_c" maxlength="1"></td>
+                    <td><input type="text" id="sub_d" maxlength="1"></td>
+                    <td><input type="text" id="sub_e" maxlength="1"></td>
+                    <td><input type="text" id="sub_f" maxlength="1"></td>
+                    <td><input type="text" id="sub_g" maxlength="1"></td>
+                    <td><input type="text" id="sub_h" maxlength="1"></td>
+                    <td><input type="text" id="sub_i" maxlength="1"></td>
+                    <td><input type="text" id="sub_j" maxlength="1"></td>
+                    <td><input type="text" id="sub_k" maxlength="1"></td>
+                    <td><input type="text" id="sub_l" maxlength="1"></td>
+                    <td><input type="text" id="sub_m" maxlength="1"></td>
+                    <td><input type="text" id="sub_n" maxlength="1"></td>
+                    <td><input type="text" id="sub_o" maxlength="1"></td>
+                    <td><input type="text" id="sub_p" maxlength="1"></td>
+                    <td><input type="text" id="sub_q" maxlength="1"></td>
+                    <td><input type="text" id="sub_r" maxlength="1"></td>
+                    <td><input type="text" id="sub_s" maxlength="1"></td>
+                    <td><input type="text" id="sub_t" maxlength="1"></td>
+                    <td><input type="text" id="sub_u" maxlength="1"></td>
+                    <td><input type="text" id="sub_v" maxlength="1"></td>
+                    <td><input type="text" id="sub_w" maxlength="1"></td>
+                    <td><input type="text" id="sub_x" maxlength="1"></td>
+                    <td><input type="text" id="sub_y" maxlength="1"></td>
+                    <td><input type="text" id="sub_z" maxlength="1"></td>
+                </tr>
+            </tbody>
+        </table>
+        <button class="myButton" onclick="substituteLetters();">REALIZAR SUBSTITUIÇÃO</button>
+        <center>Texto após substituição:<br><textarea id="plain" rows="12" cols="76"></textarea>
+            <br>
+            <script>
+                function sortfunction(a, b) {
+                    return (b - a)
+                }
+
+                function frequencyAnalysis(text) {
+                    var alphabet = 'abcdefghijklmnopqrstuvwxyz';
+                    var frequency = new Array(26);
+                    frequency['a'] = 0; frequency['b'] = 0;
+                    frequency['c'] = 0; frequency['d'] = 0;
+                    frequency['e'] = 0; frequency['f'] = 0;
+                    frequency['g'] = 0; frequency['h'] = 0;
+                    frequency['i'] = 0; frequency['j'] = 0;
+                    frequency['k'] = 0; frequency['l'] = 0;
+                    frequency['m'] = 0; frequency['n'] = 0;
+                    frequency['o'] = 0; frequency['p'] = 0;
+                    frequency['q'] = 0; frequency['r'] = 0;
+                    frequency['s'] = 0; frequency['t'] = 0;
+                    frequency['u'] = 0; frequency['v'] = 0;
+                    frequency['w'] = 0; frequency['x'] = 0;
+                    frequency['y'] = 0; frequency['z'] = 0;
+
+                    text = text.toLowerCase();
+                    for (i = 0; i < text.length; i++) {
+                        letter = text.charAt(i);
+                        if (alphabet.indexOf(letter) >= 0) {
+                            frequency[letter]++;
+                        }
+                    }
+
+                    var sortedArray = new Array(26);
+                    for (i = 0; i < 26; i++) {
+                        letter = alphabet.charAt(i);
+                        sortedArray[i] = frequency[letter];
+                    }
+
+                    sortedArray.sort(sortfunction);
+                    var step = 110 / sortedArray[0];
+                    var total = 0;
+                    var numberOfCharacters = text.length;
+                    for (i = 0; i < 26; i++) {
+                        letter = alphabet.charAt(i);
+                        if (text != "") {
+                            if (frequency[letter] > 0) {
+                                percent = (frequency[letter] / numberOfCharacters) * 100;
+                                percent = percent.toFixed(1) + '%';
+                                total = frequency[letter];
+                            } else {
+                                percent = "";
+                                total = "";
+                            }
+                            height = frequency[letter] * step;
+                            document.getElementById("graph_" + letter).innerHTML = total + '<div class="column" style="height:' + height + 'px;"></div>';
+                            document.getElementById("percent_" + letter).innerHTML = percent;
+                        } else {
+                            document.getElementById("graph_" + letter).innerHTML = '';
+                            document.getElementById("percent_" + letter).innerHTML = '';
+
+                        }
+                    }
+                }
+
+                function substituteLetters() {
+                    var alphabet = 'abcdefghijklmnopqrstuvwxyz';
+                    var plain = "";
+                    var cipher = document.getElementById("cipher").value.toLowerCase();
+                    var dict = {};
+                    var punctuation = [" ", ",", ".", "-", "!", "?", "_", "+"];
+
+                    for (i = 0; i < 26; i++) {
+                        var letter = alphabet.charAt(i);
+                        var subLetter = document.getElementById("sub_" + letter).value.toUpperCase();
+                        if (subLetter != "") dict[letter] = subLetter;
+                    }
+
+                    for (i = 0; i < cipher.length; i++) {
+                        var letter = cipher.charAt(i);
+                        var subLetter = letter;
+                        if (letter in dict) {
+                            subLetter = dict[letter];
+                        } else if (alphabet.indexOf(letter) >= 0) {
+                            subLetter = "*";
+                        }
+
+                        plain = plain + subLetter;
+                    }
+
+                    document.getElementById("plain").value = plain;
+                }
+
+                function clearText() {
+                    document.getElementById("cipher").value = "";
+                }
+            </script>
+
+
+        </center>
+    </center>
+</body>
+
+</html>
