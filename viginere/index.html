@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cifra de Vigenère</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; display: flex; flex-direction: column; align-items: center; }
+        .container { display: flex; justify-content: space-between; width: 80%; margin-bottom: 20px; }
+        .left, .right { width: 45%; text-align: left; }
+        .info-box { border: 1px solid black; padding: 10px; border-radius: 5px; background-color: #f9f9f9; }
+        table { border-collapse: collapse; margin: 10px auto; }
+        th, td { border: 1px solid black; padding: 5px; text-align: center; width: 20px; height: 20px; }
+        .highlight-row { background-color: lightblue; }
+        .highlight-col { background-color: lightgreen; }
+        .highlight-cell { background-color: yellow; }
+        input { margin: 5px; padding: 5px; width: 80%; }
+        button { margin-top: 10px; padding: 5px 10px; display: block; width: 100%; }
+        .legend { margin-top: 10px; text-align: center; }
+        .legend span { display: inline-block; width: 20px; height: 20px; margin-right: 5px; border: 1px solid black; }
+        .monospace { font-family: monospace; white-space: pre; text-align: left; font-size: 1.5em; }
+    </style>
+</head>
+<body>
+    <h2>Cifra de Vigenère - Passo a Passo</h2>
+    <div class="container">
+        <div class="left info-box">
+            <label for="ciphertext">Texto:</label>
+            <input type="text" id="ciphertext">
+            <br>
+            <label for="key">Chave:</label>
+            <input type="text" id="key">
+            <br>
+            <label for="mode">Modo:</label>
+            <select id="mode">
+                <option value="encode">Codificar</option>
+                <option value="decode">Decodificar</option>
+            </select>
+            <br>
+            <button onclick="startProcessing()">Iniciar</button>
+            <button onclick="resetProcessing()">Resetar</button>
+            <h3>Texto Resultante:</h3>
+            <p id="decodedText"></p>
+            <h3>TEXTO-CHAVE-EXPANDIDA:</h3>
+            <p id="expandedKeyDisplay" class="monospace"></p>
+        </div>
+        <div class="right info-box">
+            <h3>Passo Atual:</h3>
+            <div id="currentStep"></div>
+            <button id="nextStepButton" onclick="nextStep()" disabled>Próximo Passo</button>
+        </div>
+    </div>
+    <h3>Tábua de Vigenère</h3>
+    <div class="legend">
+        <span style="background-color: lightgreen;"></span> Coluna da Chave
+        <span style="background-color: lightblue;"></span> Linha do Texto
+        <span style="background-color: yellow;"></span> Encontro
+    </div>
+    <div id="vigenereTable"></div>
+    <script>
+        const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        let text = "", key = "", expandedKey = "", stepIndex = 0, resultText = "", mode = "decode";
+
+        function createVigenereTable() {
+            let tableHtml = "<table>";
+            tableHtml += "<tr><th></th>" + alphabet.split('').map(l => `<th>${l}</th>`).join('') + "</tr>";
+            for (let i = 0; i < 26; i++) {
+                tableHtml += `<tr id="row-${i}"><th id="idx-${i}">${alphabet[i]}</th>`;
+                for (let j = 0; j < 26; j++) {
+                    tableHtml += `<td id="cell-${i}-${j}">${alphabet[(j + i) % 26]}</td>`;
+                }
+                tableHtml += "</tr>";
+            }
+            tableHtml += "</table>";
+            document.getElementById("vigenereTable").innerHTML = tableHtml;
+        }
+
+        function startProcessing() {
+            text = document.getElementById("ciphertext").value.toUpperCase().replace(/[^A-Z]/g, "");
+            key  = document.getElementById("key").value.toUpperCase().replace(/[^A-Z]/g, "");
+            mode = document.getElementById("mode").value;
+            stepIndex = 0;
+            resultText = "";
+            document.getElementById("decodedText").innerText = resultText;
+            if (text.length === 0 || key.length === 0) {
+                document.getElementById("currentStep").innerHTML = "Por favor, insira o texto e a chave.";
+                return;
+            }
+            expandedKey = "";
+            for (let i = 0; i < text.length; i++) {
+                expandedKey += key[i % key.length];
+            }
+            document.getElementById("expandedKeyDisplay").innerText = `${text}\n${expandedKey}`;
+            document.getElementById("currentStep").innerHTML        = `<p>Clique para começar.</p>`;
+            document.getElementById("nextStepButton").disabled      = false;
+        }
+
+        function nextStep() {
+            if (stepIndex >= text.length) {
+                return;
+            }
+            const textChar  = text[stepIndex];
+            const keyChar   = expandedKey[stepIndex];
+            const textIndex = alphabet.indexOf(textChar);
+            const keyIndex  = alphabet.indexOf(keyChar);
+
+            document.querySelectorAll(".highlight-row, .highlight-col, .highlight-cell").forEach(e => e.classList.remove("highlight-row", "highlight-col", "highlight-cell"));
+            document.querySelectorAll(`td:nth-child(${keyIndex + 2}), th:nth-child(${keyIndex + 2})`).forEach(e => e.classList.add("highlight-col"));
+            
+            let resultChar = mode === "encode" ? alphabet[(textIndex + keyIndex) % 26] : alphabet[(textIndex - keyIndex + 26) % 26];
+
+            if (mode === "decode") {
+                let correctRow = alphabet.indexOf(resultChar);
+                document.getElementById(`row-${correctRow}`).classList.add("highlight-row");
+                document.getElementById(`idx-${correctRow}`).classList.add("highlight-cell");
+            } else {
+                document.getElementById(`cell-${textIndex}-${keyIndex}`).classList.add("highlight-cell");
+                document.getElementById(`row-${textIndex}`).classList.add("highlight-row");
+            }
+
+            resultText += resultChar;
+            document.getElementById("decodedText").innerText = resultText;
+            stepIndex++;
+
+            if (stepIndex >= text.length) {
+                document.getElementById("nextStepButton").disabled = true;
+            }
+        }
+
+        function resetProcessing() {
+            document.getElementById("ciphertext").value = "";
+            document.getElementById("key").value = "";
+            document.getElementById("decodedText").innerText = "";
+            document.getElementById("expandedKeyDisplay").innerText = "";
+            document.getElementById("currentStep").innerHTML = "";
+            stepIndex = 0;
+            resultText = "";
+            document.getElementById("nextStepButton").disabled = true;
+        }
+        createVigenereTable();
+    </script>
+</body>
+</html>
