@@ -1,0 +1,244 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>AES-ECB — Choosen-Plaintext Attack (CPA)</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+  <style>
+    body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, 14px; margin: 20px; }
+    .section { margin-bottom: 20px; }
+    .mono { font-family:monospace; background:#f7f7f8; padding:6px; border-radius:6px; display:inline-block; }
+    .block { display:inline-block; padding:8px; margin:4px; border-radius:6px; font-family:monospace; text-align:center; min-width:260px; }
+    .ptblock { display:inline-block; padding:8px; margin:4px; border-radius:6px; font-family:monospace; text-align:center; min-width:160px; }
+    .dup { background:#ffe8e8; border:1px solid #ffbebe; }
+    .ok { background:#eef7ff; border:1px solid #cfe9ff; }
+    .unknown { background:repeating-linear-gradient(135deg,#fff 0,#fff 6px, #f0f0f0 6px, #f0f0f0 12px); border:1px dashed #bbb; color:#666; }
+    button { padding:8px 12px; border-radius:6px; cursor:pointer; }
+    input[type=text] { padding:8px; border-radius:6px; width:220px; }
+    .row { display:flex; gap:12px; align-items:flex-start; flex-wrap:wrap; }
+    .label { font-weight:600; margin-bottom:6px; }
+    .hint { background:#f6f6f8; padding:10px; border-left:4px solid #888; border-radius:6px; }
+    pre { background:#111; color:#efe; padding:12px; border-radius:6px; overflow:auto; max-height:320px; }
+    .small { font-size:13px; color:#444; }
+  </style>
+</head>
+<body>
+  <h1>AES-ECB — Choosen-Plaintext Attack (CPA)</h1>
+
+  <div class="section">
+    <h2>1 - Oráculo (enviar input) </h2>
+    <div style="display:flex;gap:8px;align-items:center;">
+      <input type="text" id="userInput" value="">
+      <button id="btnOracle">Cifrar</button>
+      <div class="small" font="Courier New">AES(input || secret || padding)</div>
+    </div>
+    <div id="oracleResult" style="margin-top:12px;"></div>
+  </div>
+
+  <div class="section">
+    <h2>2 - Ataque no Primeiro byte (passo-a-passo)</h2>
+    <div style="display:flex;gap:8px;align-items:center;">
+      <button id="prepFirst">Gerar Poscionamento do Primeiro Byte</button>
+      <input type="text" id="guessChar" maxlength="1" placeholder="palpite (1 char)">
+      <button id="checkGuess" disabled>Testar Palpite</button>
+      <button id="revealFirst" disabled>Revelar 1º byte</button>
+      <div class="small">(Necessário gerar posionamento do primeiro byte)</div>
+    </div>
+    <div id="firstDemoArea" style="margin-top:12px;"></div>
+  </div>
+
+  <div class="section">
+    <h2>3 - Realizar ataque completo</h2>
+    <button id="runAttack">Executar ataque completo</button>
+    <div id="attackArea" style="margin-top:12px;"></div>
+  </div>
+
+<script>
+const BLOCK_SIZE = 16;
+const key = CryptoJS.lib.WordArray.random(16);
+const secrets = ["attackatdawn","topsecretmessage","hiddenvalue","supersecret","mysecrettext","nossasenha","segredo","oceanbreeze","smallwhisper","teamoctober"];
+const secret = secrets[Math.floor(Math.random()*secrets.length)];
+
+function pkcs7PadStr(s){
+  let padLen = BLOCK_SIZE - (s.length % BLOCK_SIZE);
+  return s + String.fromCharCode(padLen).repeat(padLen);
+}
+function toWordArrayFromUtf8Str(s){
+  return CryptoJS.enc.Utf8.parse(s);
+}
+function ecbEncryptHexFromString(strWithSecret){
+  let padded = pkcs7PadStr(strWithSecret);
+  let words = toWordArrayFromUtf8Str(padded);
+  let encrypted = CryptoJS.AES.encrypt(words, key, { mode: CryptoJS.mode.ECB, padding: CryptoJS.pad.NoPadding });
+  return encrypted.ciphertext.toString(CryptoJS.enc.Hex);
+}
+function oracleEncryptHex(userInput){
+  return ecbEncryptHexFromString(userInput + secret);
+}
+function splitBlocks(hex){
+  const bs = BLOCK_SIZE*2;
+  const arr = [];
+  for(let i=0;i<hex.length;i+=bs) arr.push(hex.slice(i,i+bs));
+  return arr;
+}
+function highlightDup(blocks){
+  const dup = blocks.filter((b,i)=>blocks.indexOf(b)!==i);
+  return dup;
+}
+
+/* Oracle encrypt button (plaintext & ciphertext aligned by blocks) */
+document.getElementById('btnOracle').addEventListener('click', ()=>{
+  const input = document.getElementById('userInput').value || "";
+  const ctHex = oracleEncryptHex(input);
+  const ctBlocks = splitBlocks(ctHex);
+  const knownLen = input.length;
+  const knownBlocks = Math.ceil(knownLen / BLOCK_SIZE);
+  const showBlocks = Math.min(ctBlocks.length, knownBlocks + 2);
+  const ptBlocks = [];
+  for(let i=0;i<showBlocks;i++){
+    if(i < knownBlocks){
+      const start = i*BLOCK_SIZE;
+      const chunk = input.slice(start, start+BLOCK_SIZE).padEnd(BLOCK_SIZE, '·');
+      ptBlocks.push({text: chunk, known:true});
+    } else {
+      ptBlocks.push({text: '?'.repeat(BLOCK_SIZE), known:false});
+    }
+  }
+  const dup = highlightDup(ctBlocks);
+  let html = '<div class="hint">Plaintext (por blocos) — conhecido preenchido; desconhecido em blocos pontilhados</div>';
+  html += '<div style="margin-top:8px;"><div class="label">Plaintext (blocos):</div><div class="row">';
+  ptBlocks.forEach(b=>{
+    if(b.known) html += `<div class="ptblock">${escapeHtml(b.text)}</div>`;
+    else html += `<div class="ptblock unknown">${b.text}</div>`;
+  });
+  html += '</div></div>';
+  html += '<div style="margin-top:12px;"><div class="label">Ciphertext (blocos) — alinhado com plaintext acima</div><div class="row">';
+  for(let i=0;i<ptBlocks.length;i++){
+    const blk = ctBlocks[i]||"";
+    const cls = dup.includes(blk)?'dup':'ok';
+    html += `<div class="block ${cls}">${blk}</div>`;
+  }
+  html += '</div></div>';
+  document.getElementById('oracleResult').innerHTML = html;
+});
+
+/* First-byte demo */
+let firstDemoState = { prepared:false, prefixLen: BLOCK_SIZE-1, prefix:"", targetBlock:"", mapping: {} };
+document.getElementById('prepFirst').addEventListener('click', ()=>{
+  const prefixLen = BLOCK_SIZE - 1;
+  const prefix = "A".repeat(prefixLen);
+  firstDemoState.prefixLen = prefixLen;
+  firstDemoState.prefix = prefix;
+  const ctHex = oracleEncryptHex(prefix);
+  const blocks = splitBlocks(ctHex);
+  const targetBlock = blocks[0] || "";
+  firstDemoState.targetBlock = targetBlock;
+  const mapping = {};
+  for(let b=0;b<256;b++){
+    const guess = prefix + String.fromCharCode(b);
+    const ghex = oracleEncryptHex(guess);
+    const gblocks = splitBlocks(ghex);
+    mapping[gblocks[0]] = b;
+  }
+  firstDemoState.mapping = mapping;
+  firstDemoState.prepared = true;
+  renderFirstDemoUI(blocks);
+  document.getElementById('checkGuess').disabled = false;
+  document.getElementById('revealFirst').disabled = false;
+});
+function renderFirstDemoUI(blocks){
+  const prefix = firstDemoState.prefix;
+  const blockSize = BLOCK_SIZE;
+  const knownBlocks = Math.ceil(prefix.length / blockSize);
+  const showBlocks = Math.min(blocks.length, knownBlocks + 2);
+  let html = '<div class="hint">Demo do primeiro byte — prefix preenchido com "A"</div>';
+  html += '<div style="margin-top:10px;"><div class="label">Plaintext (blocos):</div><div class="row">';
+  for(let i=0;i<showBlocks;i++){
+    if(i<knownBlocks){
+      const start = i*blockSize;
+      const chunk = prefix.slice(start,start+blockSize).padEnd(blockSize,'·');
+      html += `<div class="ptblock">${escapeHtml(chunk)}</div>`;
+    } else {
+      html += `<div class="ptblock unknown">${'?'.repeat(blockSize)}</div>`;
+    }
+  }
+  html += '</div></div>';
+  html += '<div style="margin-top:12px;"><div class="label">Ciphertext (blocos):</div><div class="row">';
+  for(let i=0;i<showBlocks;i++){
+    const blk = blocks[i] || "";
+    const dup = blocks.filter(b=>b===blk).length>1;
+    html += `<div class="block ${dup? 'dup':'ok'}">${blk}</div>`;
+  }
+  html += '</div></div>';
+  html += '<div style="margin-top:10px;" id="firstControls"><div class="small">Agora teste palpites de 1 char para o primeiro byte do secret.</div></div>';
+  document.getElementById('firstDemoArea').innerHTML = html;
+}
+document.getElementById('checkGuess').addEventListener('click', async ()=>{
+  if(!firstDemoState.prepared) return alert('Primeiro prepare o demo.');
+  const g = document.getElementById('guessChar').value;
+  if(!g) return alert('Digite um caracter para testar.');
+  const prefix = firstDemoState.prefix;
+  const targetBlock = firstDemoState.targetBlock;
+  const guessHex = oracleEncryptHex(prefix + g);
+  const guessBlk = splitBlocks(guessHex)[0] || "";
+  const match = guessBlk === targetBlock;
+  let html = `<div class="hint">Palpite: '${escapeHtml(g)}' (hex ${toHex(g)})</div>`;
+  html += `<div style="margin-top:8px;">Bloco do palpite: <div class="mono" style="display:inline-block">${guessBlk}</div></div>`;
+  html += `<div style="margin-top:6px;">Bloco alvo: <div class="mono" style="display:inline-block">${targetBlock}</div></div>`;
+  html += `<div style="margin-top:8px;" class="small">${match ? '<strong style="color:green">Corresponde — byte correto!</strong>' : '<span style="color:#a00">Não corresponde.</span>'}</div>`;
+  document.getElementById('firstControls').innerHTML = html;
+});
+document.getElementById('revealFirst').addEventListener('click', ()=>{
+  if(!firstDemoState.prepared) return alert('Prepare primeiro.');
+  const mapping = firstDemoState.mapping;
+  const target = firstDemoState.targetBlock;
+  const found = mapping[target];
+  if(found === undefined){
+    document.getElementById('firstControls').innerHTML = '<div class="hint">Byte não encontrado no mapeamento (inconsistência).</div>';
+    return;
+  }
+  const ch = String.fromCharCode(found);
+  document.getElementById('firstControls').innerHTML = `<div class="hint">Byte correto (hex ${found.toString(16).padStart(2,'0')}), ASCII: '${escapeHtml(ch)}'</div>`;
+});
+
+/* Full attack */
+document.getElementById('runAttack').addEventListener('click', ()=>{
+  const steps = [];
+  let recovered = "";
+  const ctEmptyHex = oracleEncryptHex("");
+  const totalLenBytes = ctEmptyHex.length/2;
+  for(let i=0;i<totalLenBytes;i++){
+    const padLen = (BLOCK_SIZE-1) - (i % BLOCK_SIZE);
+    const prefix = "A".repeat(padLen);
+    const targetHex = oracleEncryptHex(prefix);
+    const targetBlocks = splitBlocks(targetHex);
+    const targetBlockIndex = Math.floor((i + padLen) / BLOCK_SIZE);
+    const targetBlock = targetBlocks[targetBlockIndex] || "";
+    let found = null;
+    for(let b=0;b<256;b++){
+      const guess = prefix + recovered + String.fromCharCode(b);
+      const gh = oracleEncryptHex(guess);
+      const gblocks = splitBlocks(gh);
+      const gblk = gblocks[targetBlockIndex] || "";
+      if(gblk === targetBlock){
+        found = String.fromCharCode(b);
+        break;
+      }
+    }
+    if(found === null) { steps.push(`Parando: nenhum byte correspondente encontrado no passo ${i+1}`); break; }
+    recovered += found;
+    steps.push(`Byte ${i+1}: recuperado '${escapeHtml(found)}' → ${escapeHtml(recovered)}`);
+    if(recovered.length >= secret.length) break;
+  }
+  let recoveredDisplay = recovered;
+  const out = '<div class="hint">Secret recuperada (simulada): <span class="mono">'+ escapeHtml(recoveredDisplay) +'</span></div><pre>'+ steps.join("\n") +'</pre>';
+  document.getElementById('attackArea').innerHTML = out;
+});
+
+/* small helpers */
+function escapeHtml(s){ return (s+'').replace(/[&<>"']/g, function(m){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]; }); }
+function toHex(ch){ const b = unescape(encodeURIComponent(ch[0]||'')); let h=''; for(let i=0;i<b.length;i++){ h += b.charCodeAt(i).toString(16).padStart(2,'0'); } return h; }
+</script>
+</body>
+</html>
+
