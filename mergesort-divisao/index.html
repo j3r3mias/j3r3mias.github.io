@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MergeSort - Divisão</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .tree-container {
+      position: relative;
+      width: 100%;
+      min-height: 600px;
+      overflow: auto;
+    }
+    .tree-level {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      flex-wrap: nowrap;
+      margin-top: 40px;
+      position: relative;
+      z-index: 2;
+    }
+    .node {
+      background-color: #e0f2fe;
+      border: 2px solid #38bdf8;
+      border-radius: 12px;
+      padding: 10px 14px;
+      min-width: 100px;
+      text-align: center;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      transition: all 0.3s ease;
+      opacity: 0.2;
+      position: relative;
+      z-index: 3;
+    }
+    .node.visible {
+      opacity: 1;
+    }
+    .node.current {
+      background-color: #fde68a;
+      border-color: #f59e0b;
+      transform: scale(1.1);
+      z-index: 10;
+    }
+    svg.lines {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      pointer-events: none;
+      overflow: visible;
+    }
+  </style>
+</head>
+<body class="bg-gray-50 flex flex-col items-center min-h-screen p-6">
+
+  <h1 class="text-3xl font-bold mb-4 text-blue-700">MergeSort - Divisão</h1>
+
+  <div class="bg-white shadow-md rounded-xl p-4 w-full max-w-2xl mb-6">
+    <label class="block mb-2 font-semibold">Array (separado por vírgula):</label>
+    <input id="arrayInput" class="border w-full p-2 rounded mb-4" placeholder="ex: 38,27,43,3,9,82,10" />
+
+    <label class="block mb-2 font-semibold">Tamanho máximo (x):</label>
+    <input id="minSize" type="number" class="border w-full p-2 rounded mb-4" placeholder="ex: 2" />
+
+    <div class="flex flex-wrap gap-3">
+      <button id="randomBtn" class="bg-amber-500 text-white px-4 py-2 rounded hover:bg-amber-600">Aleatorizar</button>
+      <button id="buildBtn" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Construir</button>
+      <button id="nextStepBtn" class="bg-emerald-600 text-white px-4 py-2 rounded hover:bg-emerald-700" disabled>Next</button>
+      <button id="animateBtn" class="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700" disabled>Executar Tudo</button>
+    </div>
+  </div>
+
+  <div id="treeContainer" class="tree-container bg-white shadow-inner rounded-xl p-6 w-full max-w-7xl">
+    <svg id="connectionLines" class="lines"></svg>
+  </div>
+
+  <script>
+    function divideForTree(arr, x) {
+      if (arr.length <= x) return { arr, children: [] };
+      const mid = Math.floor(arr.length / 2);
+      const left = divideForTree(arr.slice(0, mid), x);
+      const right = divideForTree(arr.slice(mid), x);
+      return { arr, children: [left, right] };
+    }
+
+    function getLevels(tree) {
+      const levels = [];
+      function traverse(node, depth = 0) {
+        if (!levels[depth]) levels[depth] = [];
+        levels[depth].push(node);
+        node.depth = depth;
+        node.children.forEach(child => traverse(child, depth + 1));
+      }
+      traverse(tree);
+      return levels;
+    }
+
+    function getRecursiveOrder(node, seq = []) {
+      seq.push(node);
+      node.children.forEach(child => getRecursiveOrder(child, seq));
+      return seq;
+    }
+
+    function renderTree(levels, container, svg) {
+      container.querySelectorAll(".tree-level").forEach(el => el.remove());
+      svg.innerHTML = "";
+      levels.forEach(level => {
+        const levelDiv = document.createElement("div");
+        levelDiv.className = "tree-level";
+        level.forEach(node => {
+          const nodeDiv = document.createElement("div");
+          nodeDiv.className = "node";
+          nodeDiv.textContent = JSON.stringify(node.arr);
+          levelDiv.appendChild(nodeDiv);
+          node._el = nodeDiv;
+        });
+        container.appendChild(levelDiv);
+      });
+      drawLines(levels, svg);
+    }
+
+    function drawLines(levels, svg) {
+      svg.innerHTML = "";
+      for (let i = 0; i < levels.length - 1; i++) {
+        const parents = levels[i];
+        const children = levels[i + 1];
+        parents.forEach(parent => {
+          parent.children.forEach(child => {
+            const pRect = parent._el.getBoundingClientRect();
+            const cRect = child._el.getBoundingClientRect();
+            const containerRect = svg.getBoundingClientRect();
+            const x1 = pRect.left + pRect.width / 2 - containerRect.left;
+            const y1 = pRect.bottom - containerRect.top;
+            const x2 = cRect.left + cRect.width / 2 - containerRect.left;
+            const y2 = cRect.top - containerRect.top;
+            const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+            line.setAttribute("x1", x1);
+            line.setAttribute("y1", y1);
+            line.setAttribute("x2", x2);
+            line.setAttribute("y2", y2);
+            line.setAttribute("stroke", "#94a3b8");
+            line.setAttribute("stroke-width", "2");
+            svg.appendChild(line);
+          });
+        });
+      }
+    }
+
+    document.getElementById("randomBtn").addEventListener("click", () => {
+      const size = Math.floor(Math.random() * 9) + 6; // 6–14
+      const arr = Array.from({ length: size }, () => Math.floor(Math.random() * 100));
+      const x = Math.floor(Math.random() * 5) + 1; // 1–5
+      document.getElementById("arrayInput").value = arr.join(",");
+      document.getElementById("minSize").value = x;
+    });
+
+    document.getElementById("buildBtn").addEventListener("click", () => {
+      const arrInput = document.getElementById("arrayInput").value.trim();
+      const x = parseInt(document.getElementById("minSize").value);
+      const container = document.getElementById("treeContainer");
+      const svg = document.getElementById("connectionLines");
+      const nextBtn = document.getElementById("nextStepBtn");
+      const playBtn = document.getElementById("animateBtn");
+
+      if (!arrInput || isNaN(x)) {
+        container.innerHTML = `<p class='text-red-600 font-semibold p-4'>⚠️ Please enter a valid array and number.</p>`;
+        nextBtn.disabled = true;
+        playBtn.disabled = true;
+        return;
+      }
+
+      const arr = arrInput.split(",").map(n => parseFloat(n.trim())).filter(n => !isNaN(n));
+      const tree = divideForTree(arr, x);
+      const levels = getLevels(tree);
+      renderTree(levels, container, svg);
+
+      const order = getRecursiveOrder(tree);
+      let step = 0;
+
+      nextBtn.disabled = false;
+      playBtn.disabled = false;
+
+      function clearHighlights() {
+        order.forEach(n => n._el.classList.remove("current"));
+      }
+
+      function showStep() {
+        if (step >= order.length) return;
+        const node = order[step];
+        clearHighlights();
+        node._el.classList.add("visible", "current");
+        node.children.forEach(c => c._el.classList.add("visible"));
+        step++;
+      }
+
+      nextBtn.onclick = showStep;
+
+      playBtn.onclick = () => {
+        nextBtn.disabled = true;
+        playBtn.disabled = true;
+        step = 0;
+        order.forEach(n => n._el.classList.remove("visible", "current"));
+        function animate() {
+          if (step >= order.length) {
+            nextBtn.disabled = false;
+            playBtn.disabled = false;
+            clearHighlights();
+            return;
+          }
+          showStep();
+          setTimeout(animate, 1000);
+        }
+        animate();
+      };
+    });
+  </script>
+</body>
+</html>
+
