@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Troca de Cartas</title>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+    background: linear-gradient(135deg, #1e3c72, #2a5298);
+}
+
+.game-wrapper {
+    background: white;
+    padding: 30px 40px;
+    border-radius: 20px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+    text-align: center;
+}
+
+.container {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.card {
+    width: 80px;
+    height: 110px;
+    background: linear-gradient(135deg, #1976d2, #0d47a1);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border-radius: 12px;
+    font-size: 26px;
+    font-weight: bold;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+    transition: all 0.25s ease;
+}
+
+.card:hover {
+    transform: translateY(-8px) scale(1.05);
+}
+
+.card.hidden {
+    background: #90a4ae;
+    color: #90a4ae;
+}
+
+.card:not(.hidden) {
+    background: linear-gradient(135deg, #43a047, #1b5e20);
+}
+
+.buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 15px;
+}
+
+button {
+    padding: 12px 20px;
+    border: none;
+    background: linear-gradient(135deg, #0288d1, #01579b);
+    color: white;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+}
+
+#message {
+    margin-top: 20px;
+    font-size: 18px;
+    font-weight: bold;
+    padding: 10px 15px;
+    border-radius: 8px;
+    display: none;
+}
+
+#counter {
+    margin-top: 15px;
+    font-size: 16px;
+    font-weight: bold;
+}
+</style>
+</head>
+
+<body>
+
+<div class="game-wrapper">
+    <div class="container" id="cardContainer"></div>
+
+    <div class="buttons">
+        <button onclick="swapCards()">Trocar</button>
+        <button onclick="cancelSelection()">Não Trocar</button>
+        <button onclick="shuffleCards()">Embaralhar</button>
+        <button onclick="finishGame()">Terminei</button>
+    </div>
+
+    <p id="message"></p>
+    <p id="counter">Trocas realizadas: 0</p>
+</div>
+
+<script>
+let cardValues = ['5', '1', '4', '2', '8', '3'];
+let selectedCards = [];
+let swapCount = 0;
+let gameFinished = false;
+
+function hideMessage() {
+    const message = document.getElementById("message");
+    message.style.display = "none";
+}
+
+function createCards() {
+    const container = document.getElementById("cardContainer");
+    container.innerHTML = "";
+
+    cardValues.forEach((value, index) => {
+        let card = document.createElement("div");
+        card.classList.add("card", "hidden");
+        card.dataset.index = index;
+        card.dataset.value = value;
+        card.onclick = function() { revealCard(this); };
+        container.appendChild(card);
+    });
+}
+
+function revealCard(card) {
+    if (gameFinished) return;
+
+    hideMessage();
+
+    if (selectedCards.length < 2 && card.classList.contains("hidden")) {
+        card.textContent = card.dataset.value;
+        card.classList.remove("hidden");
+        selectedCards.push(card);
+    }
+}
+
+function swapCards() {
+    if (gameFinished) return;
+
+    hideMessage();
+
+    if (selectedCards.length === 2) {
+        let tempValue = selectedCards[0].dataset.value;
+        selectedCards[0].dataset.value = selectedCards[1].dataset.value;
+        selectedCards[1].dataset.value = tempValue;
+
+        selectedCards.forEach(card => {
+            card.textContent = "";
+            card.classList.add("hidden");
+        });
+
+        selectedCards = [];
+        swapCount++;
+        document.getElementById("counter").textContent = "Trocas realizadas: " + swapCount;
+    }
+}
+
+function cancelSelection() {
+    if (gameFinished) return;
+
+    hideMessage();
+
+    selectedCards.forEach(card => {
+        card.textContent = "";
+        card.classList.add("hidden");
+    });
+
+    selectedCards = [];
+}
+
+function shuffleCards() {
+    cardValues.sort(() => Math.random() - 0.5);
+    selectedCards = [];
+    swapCount = 0;
+    gameFinished = false;
+
+    document.getElementById("counter").textContent = "Trocas realizadas: 0";
+    hideMessage();
+
+    createCards();
+}
+
+function finishGame() {
+    if (gameFinished) return;
+
+    const cards = Array.from(document.querySelectorAll(".card"));
+    const values = cards.map(card => card.dataset.value);
+    const sortedValues = cardValues.slice().sort();
+
+    const message = document.getElementById("message");
+
+    if (values.join("") === sortedValues.join("")) {
+
+        message.textContent = "🎉 Parabéns! Cartas ordenadas corretamente!";
+        message.style.display = "block";
+        message.style.backgroundColor = "#2e7d32";
+        message.style.color = "white";
+
+        cards.forEach(card => {
+            card.textContent = card.dataset.value;
+            card.classList.remove("hidden");
+        });
+
+        gameFinished = true;
+
+    } else {
+
+        message.textContent = "❌ Ainda não está na ordem correta!";
+        message.style.display = "block";
+        message.style.backgroundColor = "#c62828";
+        message.style.color = "white";
+    }
+}
+
+createCards();
+</script>
+
+</body>
+</html>
