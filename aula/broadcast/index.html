@@ -48,13 +48,6 @@
   </div>
 
   <div id="app" style="display:none">
-    <p id="cert-hint" style="font-size:0.85rem; opacity:0.75">
-      Primeira vez nesta máquina? Abra
-      <a id="cert-link" href="#" target="_blank" rel="noopener">este link</a>
-      e aceite o aviso de certificado antes de iniciar — senão a
-      transmissão falha silenciosamente.
-    </p>
-
     <video id="preview" muted autoplay playsinline></video>
 
     <label>
@@ -70,13 +63,12 @@
 
   <script src="publisher.js"></script>
   <script>
-    // Ajuste para o endereço público da sua VPS rodando o MediaMTX.
+    // Endereço público do Caddy na VPS, que repassa para o MediaMTX.
     // https porque o token de publicação vai no header Authorization do
-    // handshake WHIP — precisa ir criptografado. O certificado é
-    // autoassinado, então da primeira vez o navegador vai bloquear o
-    // fetch() até você abrir https://52.91.140.115:8889/ direto e
-    // aceitar o aviso de segurança uma vez (veja o README).
-    const MEDIAMTX_HOST = "https://52.91.140.115:8889";
+    // handshake WHIP — precisa ir criptografado. O certificado é do
+    // Let's Encrypt, emitido e renovado pelo Caddy, então não há aviso
+    // de segurança nem nada a aceitar no navegador.
+    const MEDIAMTX_HOST = "https://aula.idp-moodle.site";
     const PATH = "aula";
 
     // O token é a credencial de publicação, então não pode ficar exposto na
@@ -106,7 +98,6 @@
 
     const missingTokenEl = document.getElementById("missing-token");
     const appEl = document.getElementById("app");
-    document.getElementById("cert-link").href = MEDIAMTX_HOST + "/";
 
     if (!token) {
       missingTokenEl.style.display = "block";
