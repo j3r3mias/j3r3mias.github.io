@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+<meta charset="utf-8" />
+<title>Iniciar transmissão</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex, nofollow" />
+<style>
+  body {
+    font-family: system-ui, sans-serif;
+    background: #111;
+    color: #eee;
+    max-width: 640px;
+    margin: 40px auto;
+    padding: 0 16px;
+  }
+  h1 { font-size: 1.2rem; }
+  video {
+    width: 100%;
+    background: #000;
+    border-radius: 8px;
+    display: none;
+  }
+  label { display: flex; align-items: center; gap: 8px; margin: 16px 0; }
+  button {
+    font-size: 1rem;
+    padding: 10px 20px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+  }
+  #start { background: #2563eb; color: #fff; }
+  #stop { background: #dc2626; color: #fff; display: none; }
+  #status { margin-top: 16px; opacity: 0.8; white-space: pre-wrap; }
+  #missing-token {
+    background: #7f1d1d;
+    padding: 12px;
+    border-radius: 6px;
+  }
+</style>
+</head>
+<body>
+  <h1>Transmissão da aula</h1>
+
+  <div id="missing-token" style="display:none">
+    Link inválido: falta o parâmetro <code>?token=</code> na URL.
+  </div>
+
+  <div id="app" style="display:none">
+    <p id="cert-hint" style="font-size:0.85rem; opacity:0.75">
+      Primeira vez nesta máquina? Abra
+      <a id="cert-link" href="#" target="_blank" rel="noopener">este link</a>
+      e aceite o aviso de certificado antes de iniciar — senão a
+      transmissão falha silenciosamente.
+    </p>
+
+    <video id="preview" muted autoplay playsinline></video>
+
+    <label>
+      <input type="checkbox" id="audio-toggle" />
+      Incluir áudio (microfone) — desligado por padrão
+    </label>
+
+    <button id="start">Iniciar transmissão</button>
+    <button id="stop">Encerrar transmissão</button>
+
+    <div id="status"></div>
+  </div>
+
+  <script src="publisher.js"></script>
+  <script>
+    // Ajuste para o endereço público da sua VPS rodando o MediaMTX.
+    // https porque o token de publicação vai no header Authorization do
+    // handshake WHIP — precisa ir criptografado. O certificado é
+    // autoassinado, então da primeira vez o navegador vai bloquear o
+    // fetch() até você abrir https://52.91.140.115:8889/ direto e
+    // aceitar o aviso de segurança uma vez (veja o README).
+    const MEDIAMTX_HOST = "https://52.91.140.115:8889";
+    const PATH = "aula";
+
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get("token");
+
+    const missingTokenEl = document.getElementById("missing-token");
+    const appEl = document.getElementById("app");
+    document.getElementById("cert-link").href = MEDIAMTX_HOST + "/";
+
+    if (!token) {
+      missingTokenEl.style.display = "block";
+    } else {
+      appEl.style.display = "block";
+    }
+
+    const preview = document.getElementById("preview");
+    const audioToggle = document.getElementById("audio-toggle");
+    const startBtn = document.getElementById("start");
+    const stopBtn = document.getElementById("stop");
+    const statusEl = document.getElementById("status");
+
+    let publisher = null;
+    let screenStream = null;
+    let micStream = null;
+
+    function setStatus(msg) {
+      statusEl.textContent = msg;
+    }
+
+    async function start() {
+      startBtn.disabled = true;
+      setStatus("pedindo acesso à tela...");
+
+      try {
+        screenStream = await navigator.mediaDevices.getDisplayMedia({
+          video: {
+            width: { ideal: 1280 },
+            height: { ideal: 720 },
+            frameRate: { ideal: 12 },
+            cursor: "always",
+          },
+          audio: false,
+        });
+      } catch (err) {
+        setStatus("erro ao capturar a tela: " + err);
+        startBtn.disabled = false;
+        return;
+      }
+
+      const tracks = [...screenStream.getVideoTracks()];
+
+      if (audioToggle.checked) {
+        try {
+          micStream = await navigator.mediaDevices.getUserMedia({
+            audio: {
+              echoCancellation: true,
+              noiseSuppression: true,
+              autoGainControl: true,
+            },
+          });
+          tracks.push(...micStream.getAudioTracks());
+        } catch (err) {
+          setStatus("não foi possível acessar o microfone (" + err + "), continuando sem áudio");
+        }
+      }
+
+      const outStream = new MediaStream(tracks);
+      preview.srcObject = outStream;
+      preview.style.display = "block";
+
+      // Se o usuário parar o compartilhamento pelo controle nativo do Chrome.
+      screenStream.getVideoTracks()[0].addEventListener("ended", stop);
+
+      publisher = new MediaMTXWebRTCPublisher({
+        url: `${MEDIAMTX_HOST}/${PATH}/whip`,
+        token: token,
+        stream: outStream,
+        videoCodec: "vp8",
+        videoBitrate: 900,
+        audioCodec: "opus",
+        audioBitrate: 32,
+        audioVoice: true,
+        onConnected: () => setStatus("ao vivo"),
+        onError: (err) => setStatus("erro: " + err),
+      });
+
+      startBtn.style.display = "none";
+      stopBtn.style.display = "inline-block";
+    }
+
+    function stop() {
+      if (publisher !== null) {
+        publisher.close();
+        publisher = null;
+      }
+      for (const s of [screenStream, micStream]) {
+        if (s !== null) {
+          for (const t of s.getTracks()) t.stop();
+        }
+      }
+      screenStream = null;
+      micStream = null;
+
+      preview.style.display = "none";
+      preview.srcObject = null;
+      startBtn.style.display = "inline-block";
+      startBtn.disabled = false;
+      stopBtn.style.display = "none";
+      setStatus("encerrada");
+    }
+
+    startBtn.addEventListener("click", start);
+    stopBtn.addEventListener("click", stop);
+    window.addEventListener("beforeunload", stop);
+  </script>
+</body>
+</html>
