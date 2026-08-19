@@ -126,9 +126,15 @@
       try {
         screenStream = await navigator.mediaDevices.getDisplayMedia({
           video: {
-            width: { ideal: 1280 },
-            height: { ideal: 720 },
-            frameRate: { ideal: 12 },
+            // `max` e não `ideal`: o conteúdo é slide e código, então o que
+            // importa é não redimensionar. Reduzir a captura é o que borra
+            // texto pequeno — aqui a tela é capturada como está, e só entra
+            // um teto para o caso de um monitor maior que 1080p.
+            width: { max: 1920 },
+            height: { max: 1080 },
+            // Tela quase estática: 10 fps cobre slides e digitação, e sobra
+            // bitrate para nitidez.
+            frameRate: { ideal: 10, max: 15 },
             cursor: "always",
           },
           audio: false,
@@ -140,6 +146,13 @@
       }
 
       const tracks = [...screenStream.getVideoTracks()];
+
+      // Prioriza nitidez sobre fluidez: em queda de banda o Chrome derruba
+      // o frame rate e preserva a resolução, em vez de borrar a imagem para
+      // manter os quadros. É o comportamento certo para texto na tela.
+      if ("contentHint" in tracks[0]) {
+        tracks[0].contentHint = "text";
+      }
 
       if (audioToggle.checked) {
         try {
@@ -167,8 +180,16 @@
         url: `${MEDIAMTX_HOST}/${PATH}/whip`,
         token: token,
         stream: outStream,
-        videoCodec: "vp8",
-        videoBitrate: 900,
+        // H264 e não VP8: o WebRTC aceitaria os dois, mas o HLS entregue
+        // aos alunos não transporta VP8 — o MediaMTX não transcodifica,
+        // então o que sai daqui é o que ele tem que empacotar. Publicar
+        // em VP8 sobe normalmente e só falha do lado do aluno, com
+        // "muxer instance not available".
+        videoCodec: "h264",
+        // Teto, não taxa constante: com slide parado o H264 manda muito
+        // menos que isso. O teto só entra em cena em transição de slide e
+        // rolagem de código, que é onde a nitidez do texto se decide.
+        videoBitrate: 1200,
         audioCodec: "opus",
         audioBitrate: 32,
         audioVoice: true,
