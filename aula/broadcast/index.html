@@ -44,6 +44,7 @@
 
   <div id="missing-token" style="display:none">
     Link inválido: falta o parâmetro <code>?token=</code> na URL.
+    Abra o link completo gerado por <code>scripts/gen-token.py</code>.
   </div>
 
   <div id="app" style="display:none">
@@ -78,8 +79,30 @@
     const MEDIAMTX_HOST = "https://52.91.140.115:8889";
     const PATH = "aula";
 
+    // O token é a credencial de publicação, então não pode ficar exposto na
+    // barra de endereços enquanto o professor compartilha a tela: lemos da
+    // query string, guardamos na sessão da aba e reescrevemos a URL sem ele.
+    // O sessionStorage faz o token sobreviver a um F5 (e some quando a aba
+    // fecha), então recarregar a página não exige abrir o link de novo.
+    const TOKEN_KEY = "idp-class-stream-token";
     const params = new URLSearchParams(window.location.search);
-    const token = params.get("token");
+    let token = params.get("token");
+
+    if (token) {
+      try {
+        sessionStorage.setItem(TOKEN_KEY, token);
+      } catch (err) {
+        // Sessão restrita (storage bloqueado): seguimos só com o token em
+        // memória — funciona, mas um F5 vai pedir o link outra vez.
+      }
+      history.replaceState({}, "", window.location.pathname);
+    } else {
+      try {
+        token = sessionStorage.getItem(TOKEN_KEY);
+      } catch (err) {
+        token = null;
+      }
+    }
 
     const missingTokenEl = document.getElementById("missing-token");
     const appEl = document.getElementById("app");
