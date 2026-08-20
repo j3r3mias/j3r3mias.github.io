@@ -67,18 +67,20 @@
     function showLive() {
       video.style.display = "block";
       offline.style.display = "none";
-      unmuteBtn.style.display = "inline-block";
+      if (unmuteBtn) unmuteBtn.style.display = "inline-block";
     }
 
     function showOffline() {
       video.style.display = "none";
       offline.style.display = "flex";
-      unmuteBtn.style.display = "none";
+      if (unmuteBtn) unmuteBtn.style.display = "none";
     }
 
-    unmuteBtn.addEventListener("click", () => {
-      video.muted = false;
-    });
+    if (unmuteBtn) {
+      unmuteBtn.addEventListener("click", () => {
+        video.muted = false;
+      });
+    }
 
     window.addEventListener("load", () => {
       if (!window.Hls || !Hls.isSupported()) {
