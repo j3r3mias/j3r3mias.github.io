@@ -1,50 +1,77 @@
 <!doctype html>
 <html lang="pt-br">
+
 <head>
-<meta charset="utf-8" />
-<title>Iniciar transmissão</title>
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta name="robots" content="noindex, nofollow" />
-<style>
-  body {
-    font-family: system-ui, sans-serif;
-    background: #111;
-    color: #eee;
-    max-width: 640px;
-    margin: 40px auto;
-    padding: 0 16px;
-  }
-  h1 { font-size: 1.2rem; }
-  video {
-    width: 100%;
-    background: #000;
-    border-radius: 8px;
-    display: none;
-  }
-  label { display: flex; align-items: center; gap: 8px; margin: 16px 0; }
-  button {
-    font-size: 1rem;
-    padding: 10px 20px;
-    border-radius: 6px;
-    border: none;
-    cursor: pointer;
-  }
-  #start { background: #2563eb; color: #fff; }
-  #stop { background: #dc2626; color: #fff; display: none; }
-  #status { margin-top: 16px; opacity: 0.8; white-space: pre-wrap; }
-  #missing-token {
-    background: #7f1d1d;
-    padding: 12px;
-    border-radius: 6px;
-  }
-</style>
+  <meta charset="utf-8" />
+  <title>Iniciar transmissão</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex, nofollow" />
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      background: #111;
+      color: #eee;
+      max-width: 640px;
+      margin: 40px auto;
+      padding: 0 16px;
+    }
+
+    h1 {
+      font-size: 1.2rem;
+    }
+
+    video {
+      width: 100%;
+      background: #000;
+      border-radius: 8px;
+      display: none;
+    }
+
+    label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 16px 0;
+    }
+
+    button {
+      font-size: 1rem;
+      padding: 10px 20px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+    }
+
+    #start {
+      background: #2563eb;
+      color: #fff;
+    }
+
+    #stop {
+      background: #dc2626;
+      color: #fff;
+      display: none;
+    }
+
+    #status {
+      margin-top: 16px;
+      opacity: 0.8;
+      white-space: pre-wrap;
+    }
+
+    #missing-token {
+      background: #7f1d1d;
+      padding: 12px;
+      border-radius: 6px;
+    }
+  </style>
 </head>
+
 <body>
   <h1>Transmissão da aula</h1>
 
   <div id="missing-token" style="display:none">
-    Link inválido: falta o parâmetro <code>?token=</code> na URL.
-    Abra o link completo gerado por <code>scripts/gen-token.py</code>.
+    Link inválido.
   </div>
 
   <div id="app" style="display:none">
@@ -52,7 +79,7 @@
 
     <label>
       <input type="checkbox" id="audio-toggle" />
-      Incluir áudio (microfone) — desligado por padrão
+      Áudio.
     </label>
 
     <button id="start">Iniciar transmissão</button>
@@ -63,37 +90,40 @@
 
   <script src="publisher.js"></script>
   <script>
-    // Endereço público do Caddy na VPS, que repassa para o MediaMTX.
-    // https porque o token de publicação vai no header Authorization do
-    // handshake WHIP — precisa ir criptografado. O certificado é do
-    // Let's Encrypt, emitido e renovado pelo Caddy, então não há aviso
-    // de segurança nem nada a aceitar no navegador.
     const MEDIAMTX_HOST = "https://aula.idp-moodle.site";
     const PATH = "aula";
 
-    // O token é a credencial de publicação, então não pode ficar exposto na
-    // barra de endereços enquanto o professor compartilha a tela: lemos da
-    // query string, guardamos na sessão da aba e reescrevemos a URL sem ele.
-    // O sessionStorage faz o token sobreviver a um F5 (e some quando a aba
-    // fecha), então recarregar a página não exige abrir o link de novo.
     const TOKEN_KEY = "idp-class-stream-token";
+
+    function rememberTokenIfStorageAllows(value) {
+      try {
+        sessionStorage.setItem(TOKEN_KEY, value);
+      } catch (err) {
+        return false;
+      }
+      return true;
+    }
+
+    function recallTokenIfStorageAllows() {
+      try {
+        return sessionStorage.getItem(TOKEN_KEY);
+      } catch (err) {
+        return null;
+      }
+    }
+
+    function removeTokenFromAddressBar() {
+      history.replaceState({}, "", window.location.pathname);
+    }
+
     const params = new URLSearchParams(window.location.search);
     let token = params.get("token");
 
     if (token) {
-      try {
-        sessionStorage.setItem(TOKEN_KEY, token);
-      } catch (err) {
-        // Sessão restrita (storage bloqueado): seguimos só com o token em
-        // memória — funciona, mas um F5 vai pedir o link outra vez.
-      }
-      history.replaceState({}, "", window.location.pathname);
+      rememberTokenIfStorageAllows(token);
+      removeTokenFromAddressBar();
     } else {
-      try {
-        token = sessionStorage.getItem(TOKEN_KEY);
-      } catch (err) {
-        token = null;
-      }
+      token = recallTokenIfStorageAllows();
     }
 
     const missingTokenEl = document.getElementById("missing-token");
@@ -121,19 +151,13 @@
 
     async function start() {
       startBtn.disabled = true;
-      setStatus("pedindo acesso à tela...");
+      setStatus("pedindo acesso..");
 
       try {
         screenStream = await navigator.mediaDevices.getDisplayMedia({
           video: {
-            // `max` e não `ideal`: o conteúdo é slide e código, então o que
-            // importa é não redimensionar. Reduzir a captura é o que borra
-            // texto pequeno — aqui a tela é capturada como está, e só entra
-            // um teto para o caso de um monitor maior que 1080p.
             width: { max: 1920 },
             height: { max: 1080 },
-            // Tela quase estática: 10 fps cobre slides e digitação, e sobra
-            // bitrate para nitidez.
             frameRate: { ideal: 10, max: 15 },
             cursor: "always",
           },
@@ -147,9 +171,6 @@
 
       const tracks = [...screenStream.getVideoTracks()];
 
-      // Prioriza nitidez sobre fluidez: em queda de banda o Chrome derruba
-      // o frame rate e preserva a resolução, em vez de borrar a imagem para
-      // manter os quadros. É o comportamento certo para texto na tela.
       if ("contentHint" in tracks[0]) {
         tracks[0].contentHint = "text";
       }
@@ -165,7 +186,7 @@
           });
           tracks.push(...micStream.getAudioTracks());
         } catch (err) {
-          setStatus("não foi possível acessar o microfone (" + err + "), continuando sem áudio");
+          setStatus("não foi possível acessar microfone (" + err + ")");
         }
       }
 
@@ -173,22 +194,13 @@
       preview.srcObject = outStream;
       preview.style.display = "block";
 
-      // Se o usuário parar o compartilhamento pelo controle nativo do Chrome.
       screenStream.getVideoTracks()[0].addEventListener("ended", stop);
 
       publisher = new MediaMTXWebRTCPublisher({
         url: `${MEDIAMTX_HOST}/${PATH}/whip`,
         token: token,
         stream: outStream,
-        // H264 e não VP8: o WebRTC aceitaria os dois, mas o HLS entregue
-        // aos alunos não transporta VP8 — o MediaMTX não transcodifica,
-        // então o que sai daqui é o que ele tem que empacotar. Publicar
-        // em VP8 sobe normalmente e só falha do lado do aluno, com
-        // "muxer instance not available".
         videoCodec: "h264",
-        // Teto, não taxa constante: com slide parado o H264 manda muito
-        // menos que isso. O teto só entra em cena em transição de slide e
-        // rolagem de código, que é onde a nitidez do texto se decide.
         videoBitrate: 1200,
         audioCodec: "opus",
         audioBitrate: 32,
@@ -227,4 +239,5 @@
     window.addEventListener("beforeunload", stop);
   </script>
 </body>
+
 </html>

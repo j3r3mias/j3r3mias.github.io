@@ -1,61 +1,62 @@
 <!doctype html>
 <html lang="pt-br">
+
 <head>
-<meta charset="utf-8" />
-<title>Aula</title>
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<script defer src="https://cdn.jsdelivr.net/npm/hls.js@1"></script>
-<style>
-  body {
-    font-family: system-ui, sans-serif;
-    background: #111;
-    color: #eee;
-    max-width: 960px;
-    margin: 40px auto;
-    padding: 0 16px;
-    text-align: center;
-  }
-  #player {
-    width: 100%;
-    aspect-ratio: 16 / 9;
-    background: #000;
-    border-radius: 8px;
-  }
-  #offline {
-    padding: 60px 16px;
-    background: #1a1a1a;
-    border-radius: 8px;
-    aspect-ratio: 16 / 9;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.1rem;
-    opacity: 0.8;
-  }
-  #unmute {
-    margin-top: 12px;
-    padding: 8px 16px;
-    border-radius: 6px;
-    border: none;
-    background: #2563eb;
-    color: #fff;
-    cursor: pointer;
-    display: none;
-  }
-</style>
+  <meta charset="utf-8" />
+  <title>Aula</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script defer src="https://cdn.jsdelivr.net/npm/hls.js@1"></script>
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      background: #111;
+      color: #eee;
+      max-width: 960px;
+      margin: 40px auto;
+      padding: 0 16px;
+      text-align: center;
+    }
+
+    #player {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      background: #000;
+      border-radius: 8px;
+    }
+
+    #offline {
+      padding: 60px 16px;
+      background: #1a1a1a;
+      border-radius: 8px;
+      aspect-ratio: 16 / 9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      opacity: 0.8;
+    }
+
+    #unmute {
+      margin-top: 12px;
+      padding: 8px 16px;
+      border-radius: 6px;
+      border: none;
+      background: #2563eb;
+      color: #fff;
+      cursor: pointer;
+      display: none;
+    }
+  </style>
 </head>
+
 <body>
   <h1>Aula</h1>
 
   <video id="player" controls autoplay muted playsinline style="display:none"></video>
-  <div id="offline">Aguardando o início da transmissão...</div>
-  <button id="unmute">Ativar som</button>
+  <div id="offline">Aguardando o início da transmissão..</div>
+  <!-- <button id="unmute">Ativar som</button> -->
 
   <script>
-    // Endereço público do Caddy na VPS, que repassa para o MediaMTX.
-    // Precisa ser https: a página é servida pelo GitHub Pages em HTTPS, e
-    // navegador nenhum carrega um recurso http a partir de uma página
-    // https (conteúdo misto) — a requisição seria bloqueada em silêncio.
     const HLS_URL = "https://aula.idp-moodle.site/aula/index.m3u8";
     const RETRY_MS = 5000;
 
@@ -103,8 +104,6 @@
         }
       });
 
-      // Quando o vídeo é retomado após pausa manual/forçada, volta pro
-      // ponto ao vivo.
       video.onplay = () => {
         if (hls.liveSyncPosition) video.currentTime = hls.liveSyncPosition;
       };
@@ -113,4 +112,5 @@
     });
   </script>
 </body>
+
 </html>
